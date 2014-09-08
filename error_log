@@ -1,0 +1,106 @@
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(/inc/functions.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 11
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(): Failed opening '/inc/functions.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 11
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(/inc/db.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 12
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(): Failed opening '/inc/db.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 12
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(/inc/interface_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 13
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(): Failed opening '/inc/interface_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 13
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(/inc/parameter_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 14
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(): Failed opening '/inc/parameter_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 14
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(/inc/label_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 15
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  include_once(): Failed opening '/inc/label_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 15
+[04-Sep-2014 02:31:16 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/thomas/public_html/projectListing/index.php:11) in /home2/thomas/public_html/projectListing/index.php on line 18
+[04-Sep-2014 02:31:16 America/Chicago] PHP Fatal error:  Uncaught exception 'PDOException' with message 'invalid data source name' in /home2/thomas/public_html/projectListing/index.php:21
+Stack trace:
+#0 /home2/thomas/public_html/projectListing/index.php(21): PDO->__construct('DB_INFO', 'DB_USER', 'DB_PASS')
+#1 {main}
+  thrown in /home2/thomas/public_html/projectListing/index.php on line 21
+[04-Sep-2014 03:03:27 America/Chicago] PHP Warning:  include(/inc/label_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 50
+[04-Sep-2014 03:03:27 America/Chicago] PHP Warning:  include(): Failed opening '/inc/label_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 50
+[04-Sep-2014 03:03:27 America/Chicago] PHP Warning:  include(/inc/parameter_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 51
+[04-Sep-2014 03:03:27 America/Chicago] PHP Warning:  include(): Failed opening '/inc/parameter_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 51
+[04-Sep-2014 03:03:27 America/Chicago] PHP Warning:  include(/inc/interface_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 52
+[04-Sep-2014 03:03:27 America/Chicago] PHP Warning:  include(): Failed opening '/inc/interface_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 52
+[04-Sep-2014 03:03:59 America/Chicago] PHP Warning:  include(/inc/label_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 50
+[04-Sep-2014 03:03:59 America/Chicago] PHP Warning:  include(): Failed opening '/inc/label_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 50
+[04-Sep-2014 03:03:59 America/Chicago] PHP Warning:  include(/inc/parameter_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 51
+[04-Sep-2014 03:03:59 America/Chicago] PHP Warning:  include(): Failed opening '/inc/parameter_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 51
+[04-Sep-2014 03:03:59 America/Chicago] PHP Warning:  include(/inc/interface_values.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/index.php on line 52
+[04-Sep-2014 03:03:59 America/Chicago] PHP Warning:  include(): Failed opening '/inc/interface_values.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/index.php on line 52
+[04-Sep-2014 03:06:41 America/Chicago] PHP Warning:  include_once(./db.inc.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 265
+[04-Sep-2014 03:06:41 America/Chicago] PHP Warning:  include_once(): Failed opening './db.inc.php' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 265
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:14 America/Chicago] PHP Warning:  array_keys() expects parameter 1 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 348
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:36:33 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 04:38:47 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/index.php on line 384
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:42 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:47:43 America/Chicago] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home2/thomas/public_html/projectListing/inc/functions.inc.php on line 327
+[04-Sep-2014 05:58:58 America/Chicago] PHP Warning:  fopen(C:\xampp\htdocs\projectListing\inc/font/unifont/OpenSans-LightItalic.ttf): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/font/unifont/ttfonts.php on line 496
+[04-Sep-2014 07:06:03 America/Chicago] PHP Warning:  fopen(C:\xampp\htdocs\projectListing\inc/font/unifont/OpenSans-LightItalic.ttf): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/font/unifont/ttfonts.php on line 496
+[04-Sep-2014 11:07:05 America/Chicago] PHP Warning:  fopen(C:\xampp\htdocs\projectListing\inc/font/unifont/OpenSans-LightItalic.ttf): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/font/unifont/ttfonts.php on line 496
+[04-Sep-2014 11:09:31 America/Chicago] PHP Warning:  stat(): stat failed for /home2/thomas/public_html/projectListing/inc/font/unifont/http://tvb-design.com/projectListing/inc/font/unifont/DejaVuSerif.ttf in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 501
+[04-Sep-2014 11:09:31 America/Chicago] PHP Warning:  fopen(/home2/thomas/public_html/projectListing/inc/font/unifont/http://tvb-design.com/projectListing/inc/font/unifont/DejaVuSerif.ttf): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/font/unifont/ttfonts.php on line 79
+[04-Sep-2014 11:10:12 America/Chicago] PHP Warning:  fopen(C:\xampp\htdocs\projectListing\inc/font/unifont/OpenSans-LightItalic.ttf): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/font/unifont/ttfonts.php on line 496
+[04-Sep-2014 11:11:41 America/Chicago] PHP Warning:  fopen(C:\xampp\htdocs\projectListing\inc/font/unifont/OpenSans-LightItalic.ttf): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/font/unifont/ttfonts.php on line 496
+[04-Sep-2014 11:46:18 America/Chicago] PHP Warning:  stat(): stat failed for ./font/unifont/./OpenSans-Regular.ttf in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 501
+[04-Sep-2014 11:46:18 America/Chicago] PHP Warning:  require_once(./font/unifont/ttfonts.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 507
+[04-Sep-2014 11:46:18 America/Chicago] PHP Fatal error:  require_once(): Failed opening required './font/unifont/ttfonts.php' (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 507
+[04-Sep-2014 11:47:28 America/Chicago] PHP Warning:  stat(): stat failed for ./font/unifont/OpenSans-Regular.ttf in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 501
+[04-Sep-2014 11:47:28 America/Chicago] PHP Warning:  require_once(./font/unifont/ttfonts.php): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 507
+[04-Sep-2014 11:47:28 America/Chicago] PHP Fatal error:  require_once(): Failed opening required './font/unifont/ttfonts.php' (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 507
+[04-Sep-2014 11:50:28 America/Chicago] PHP Warning:  include(/home2/thomas/public_html/projectListing/inc/font/./OpenSans-Regular.ttf): failed to open stream: No such file or directory in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 1356
+[04-Sep-2014 11:50:28 America/Chicago] PHP Warning:  include(): Failed opening '/home2/thomas/public_html/projectListing/inc/font/./OpenSans-Regular.ttf' for inclusion (include_path='.:/opt/php54/lib/php') in /home2/thomas/public_html/projectListing/inc/tfpdf.inc.php on line 1356

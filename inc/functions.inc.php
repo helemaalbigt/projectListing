@@ -365,12 +365,13 @@ function retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $fi
 
 	$sql = "SELECT id FROM projects " . $where . " ORDER BY date DESC, created DESC";
 
+	$_SESSION['sql_pp'] = $sql;
 	//echo $sql;exit;
 	$spaces = array("\n", " ", "  ", "   ");
 	$sql = str_ireplace($spaces, "%20", $sql);
 
 	echo <<<PREVIEW
-		<iframe id="previewIframe" src="/projectListing/project_listing_print.php?title=$listtitle&language=$language&sql=$sql&hidden=$hiddenFields" frameBorder="0"><p>Your browser does not support iframes.</p></iframe>
+	<iframe id="previewIframe" src="http://tvb-design.com/projectListing/project_listing_print.php?title=$listtitle&language=$language&hidden=$hiddenFields" frameBorder="0"><p>Your browser does not support iframes.</p></iframe>
 PREVIEW;
 }
 
