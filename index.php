@@ -676,7 +676,7 @@ else{
 			<div id="sidebar_wrapper">
 				<div id="sidebar">
 					<div id="application_title">
-						<img src="images/logoUP_small_beta.png"/><span><h1>Project Listing</h1></span>
+						<img src="images/logoUP_small.png"/><span><h1>Project Listing</h1></span>
 					</div>
 					<!--START UI-->
 					<div id="interface" class="filterform">
