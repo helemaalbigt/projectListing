@@ -19,8 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit'] == 'save project' &
 	//instantiate the Project class
 	$project = new Project();
 
+	//clean post data
+	$cleanedPost = cleanData($_POST);
 	//update the project
-	$id = $project -> updateProject($_POST);
+	$id = $project -> updateProject($cleanedPost);
 	if (!empty($id)) {
 		header('Location:../review.php?id=' . $id);
 		exit ;
@@ -28,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit'] == 'save project' &
 		exit('ERROR: problem updating project');
 	}
 }
-//if no conditions met send user to main page
+//delete project
 else if ($_GET['action'] == 'project_delete') {
 
 	//instantiate the Project class

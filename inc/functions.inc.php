@@ -375,6 +375,35 @@ function retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $fi
 PREVIEW;
 }
 
+/**
+ * Clean form data data
+ * 
+ * Strips tags and removes/replaces certain characters from post data
+ * 
+ * @param array $p Post data from a form
+ * @return array $p
+ */
+ 
+ function cleanData($p){
+ 	$returnArray = array();
+ 	foreach($p as $key => $value){
+ 		//if value is an array recursively apply this function
+ 		if(is_array($value)){
+			$returnArray[$key] = cleanData($value);
+		}
+		//if value is a string, clean data 
+		else{
+			//arrays with strings to find and replace
+ 			$find = array(";", "<?php", "?>");
+			$replace  = array(":", "", "");
+			//trips possible tags (excluding links) first, then removes certain forbidden strings, then removes backslashes, then converts remaining special characters to htmlentities
+ 			$returnArray[$key] = htmlspecialchars(stripslashes(str_replace($find, $replace, strip_tags($value, "<a>"))),ENT_QUOTES); 
+		}
+ 	}
+ 	//return the cleaned array
+ 	return $returnArray;
+ }
+
 
 /**
  * Print login or user popup
