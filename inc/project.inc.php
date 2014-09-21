@@ -219,15 +219,20 @@ class Project {
 	 * @return array array with results
 	 */
 	function retrieveProjectById($id) {
-		$sql = "SELECT number, name, coverimage, otherimages, program, startdate, enddate, countrycode, city, clienttype, date, city_pcode, street, street_number, clientname, description, projecttype, competitionwon, newnumber, status, interventiontype, category, scale, area_gross, area_weighted, eelevel, eevalue, eeloldvalue, eeloldunit, budget_estimate, budget_final, budget_type, consultants, teamUP, awards, publications, timebudget_estimate, timebudget_final, internalbudget_estimate, internalbudget_final FROM projects WHERE id=? LIMIT 1";
+		//$sql = "SELECT number, name, coverimage, otherimages, program, startdate, enddate, countrycode, city, clienttype, date, city_pcode, street, street_number, clientname, description, projecttype, competitionwon, newnumber, status, interventiontype, category, scale, area_gross, area_weighted, eelevel, eevalue, eeloldvalue, eeloldunit, budget_estimate, budget_final, budget_type, consultants, teamUP, awards, publications, timebudget_estimate, timebudget_final, internalbudget_estimate, internalbudget_final FROM projects WHERE id=? LIMIT 1";
+		$sql = "SELECT * FROM projects WHERE id=? LIMIT 1";
 		$stmt = $this -> db -> prepare($sql);
 		$stmt -> execute(array($id));
 
 		//save the returned array
 		$e = $stmt -> fetch();
 		$stmt -> closeCursor();
-
-		return $e;
+		
+		if(count($e) <= 86){	
+			return $e;
+		} else{
+			exit("ERROR: database query returned more values than allowed");
+		}
 	}
 
 	/**
@@ -437,10 +442,11 @@ IMG;
 				</br>
 SP;
 				for($i = 0; $i<count($this->otherimages); $i++){
-					$other_src = splitData(splitData($this->otherimages[$i])[0])[1];
+					$otherSrcPrep = splitData(splitData($this->otherimages[$i])[0])[1];
+					$otherSrc = APP_FOLDER.str_replace("/projectListing", "", $otherSrcPrep);
 					//add other images
 					$formattedProject .= <<<OTHERIMG
-			<img class="otherimage" src='$other_src'/>
+			<img class="otherimage" src='$otherSrc'/>
 OTHERIMG;
 				}
 			}
@@ -491,7 +497,7 @@ SUBTITLE;
 		for($i = 0; $i < count($dl); $i++) {
 			$c = array_slice($dl, $i);
 			$Hkey = key($c);
-			$Hvalue = strip_tags(array_values($c)[0], "<a>");
+			$Hvalue = htmlspecialchars_decode(array_values($c)[0], ENT_QUOTES);
 			
 			$formattedProject .= <<<LIST
 		 <div class="text_wrapper">

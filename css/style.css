@@ -87,7 +87,8 @@ span.description, .description {
 }
 
 #inputform_wrapper img, .project_wrapper img {
-	width: 215px;
+	height:113px;
+ 	margin:5px 5px 0 0;
 }
 
 .project_wrapper img.otherimage {
@@ -399,7 +400,7 @@ iframe{
 }
 
 #inputform_wrapper form.inputform {
-	width: 595pt;
+	width: 620pt;
 	margin: 0 auto;
 }
 
@@ -511,6 +512,14 @@ height:100%;
 	font-size: 20px;
 	margin: 0;
 	text-transform: none;
+}
+
+#admin .imageinput{
+	float:right;
+}
+
+#admin .imageinput .large{
+	width:335px;
 }
 
 /*
