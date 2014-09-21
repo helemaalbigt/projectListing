@@ -70,9 +70,9 @@ $project -> updateParameters($id);
 						
 					</br>
 					<div id="menu">
-						<a class="button" href="/projectListing/index.php">Submit</a>
-						<a class="button" href="/projectListing/admin.php?id=<?php echo $id ?>">Edit</a>
-						<a class="button delete" href="/projectListing/inc/update.inc.php?action=project_delete&id=<?php echo $id ?>" onclick="return confirm('You are about to DELETE a Project. \n This CANNOT BE UNDONE! \n \n  Do you want to continue?');">Delete</a>
+						<a class="button" href="./index.php">Submit</a>
+						<a class="button" href="./admin.php?id=<?php echo $id ?>">Edit</a>
+						<a class="button delete" href="./inc/update.inc.php?action=project_delete&id=<?php echo $id ?>" onclick="return confirm('You are about to DELETE a Project. \n This CANNOT BE UNDONE! \n \n  Do you want to continue?');">Delete</a>
 					</div>
 				</div>
 			</div>

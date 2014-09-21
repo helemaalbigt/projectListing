@@ -24,7 +24,7 @@ class PDF extends TFPDF {
 	//data
 	var $space_between_data = 3.75;
 	var $datakey_indent = 30;
-	var $datakeyW = 90;
+	var $datakeyW = 93;
 	//y height within current project. Used to estimate height of next project
 	var $pZ = 0;
 	
@@ -44,7 +44,7 @@ class PDF extends TFPDF {
 		//color
 		$this -> SetTextColor(0,0,0);
 		// Open Sans 15
-		$this ->SetFont('OpenSans-LI','',15);
+		$this ->SetFont('OpenSans-R','',15);
 		// Title
 		$this -> Cell(0, 10, $listtitle, 0, 0, 'R');
 		// Line break
@@ -56,7 +56,7 @@ class PDF extends TFPDF {
 		// Position at 1.5 cm from bottom
 		$this -> SetY(-14);
 		// OS 10
-		$this ->SetFont('OpenSans-LI','',10);
+		$this ->SetFont('OpenSans-R','',10);
 		// year
 		$this -> SetTextColor(127,127,127);
 		$this -> Cell(0, 0, date("Y"), 0, 0, 'L');
@@ -86,7 +86,7 @@ class PDF extends TFPDF {
 		//go through paragraphs and count lines
 		for( $i=0; $i<count($paragraphs); $i++){
 			//if more than one paragraph, add a line per break
-			$lines += floor( ceil($this -> GetStringWidth($paragraphs[$i])) / $width);
+			$lines += floor( ceil($this -> GetStringWidth($paragraphs[$i])) / ($width+0));
 			//echo ($this -> GetStringWidth($paragraphs[$i]) - 2)." ---- ".$width;exit;
 		}
 		
@@ -137,11 +137,11 @@ class PDF extends TFPDF {
 		$project -> setLanguage($language);
 		$project -> updateParameters($id);
 		//set subtitle font
-		$this -> SetFont('OpenSans-LI','',9);
+		$this -> SetFont('OpenSans-R','',9);
 		//program prep
 		$program = $project -> program[$project->L];
 		//add up height for titleblock
-		$H += 7 + $this->margin_bottom_subtitle + ($this->NumberOfLines('OpenSans-LI', $program, $this->programW)*($this->lineHeight)) + $this->margin_bottom_titleblock;;
+		$H += 7 + $this->margin_bottom_subtitle + ($this->NumberOfLines('OpenSans-R', $program, $this->programW)*($this->lineHeight)) + $this->margin_bottom_titleblock;;
 		
 		//add up height for datalist
 		//get datalist
@@ -152,8 +152,8 @@ class PDF extends TFPDF {
 			$Hvalue = array_values($c)[0];	
 			
 			if(!in_array($Hvalue, array("/","",NULL))){
-				$this -> SetFont('OpenSans-LI','',9);
-				$H += ((($this->NumberOfLines('OpenSans-LI', $Hvalue, $this->datakeyW)) - 0)*($this->lineHeight)) + $this->space_between_data;
+				$this -> SetFont('OpenSans-R','',9);
+				$H += ((($this->NumberOfLines('OpenSans-R', $Hvalue, $this->datakeyW)) - 0)*($this->lineHeight)) + $this->space_between_data;
 			}			
 		}
 		
@@ -175,12 +175,12 @@ class PDF extends TFPDF {
 		
 		// draw image	
 		$this -> SetXY($X, $Y);
-		$this -> Image("../".$project->coverimage,null,null,55);
+		$this -> Image("../".APP_FOLDER.str_replace("/projectListing", "",$project->coverimage),null,null,55);
 		
 		//draw titleblock
 		//title
 		$this -> SetXY($X + $this->indent, $Y);
-		$this -> SetFont('OpenSans-LI','',14);
+		$this -> SetFont('OpenSans-R','',14);
 		$this -> SetTextColor(0,0,0);
 		//check if titlenumber is hidden
 		if(strpos($hidden, trim(split(" ",$pnumber_labels[0])[0])) == false){
@@ -207,10 +207,10 @@ class PDF extends TFPDF {
 		//program print
 		$this -> pZ += $this->margin_bottom_subtitle;
 		$this -> SetXY($X + $this->indent, $Y+$this->pZ);
-		$this -> SetFont('OpenSans-LI','',9);
+		$this -> SetFont('OpenSans-R','',9);
 		$this -> SetTextColor(0,0,0);
 		$this -> MultiCell($this->programW, $this->lineHeight, $program, 0, 'L');
-		$this -> pZ += ( $this->NumberOfLines('OpenSans-LI', $program, $this->programW)*($this->lineHeight) );
+		$this -> pZ += ( $this->NumberOfLines('OpenSans-R', $program, $this->programW)*($this->lineHeight) );
 		
 		//add total height titleblock (+margin under it) to Z-height and set Y to this height
 		$this->pZ += $this->margin_bottom_titleblock;
@@ -243,7 +243,7 @@ class PDF extends TFPDF {
 					for($j =0; $j<count($HvalueA); $j++) {
 						//print text	
 						$this -> SetXY($X + $this->indent + $this->datakey_indent + $totalW, $Y+$this->pZ);
-						$this -> SetFont('OpenSans-LI','',9);
+						$this -> SetFont('OpenSans-R','',9);
 						$this -> SetTextColor(100,100,100);
 						$this -> Cell(0, $this->lineHeight, $HvalueA[$j] , 0, 0);
 						
@@ -263,48 +263,48 @@ class PDF extends TFPDF {
 				//print if energy efficiency value
 				else if(strpos(joinData($eel_labels),split(" ",$Hkey)[0]) !== false){
 					$this -> SetXY($X + $this->indent + $this->datakey_indent, $Y+$this->pZ);
-					$this -> SetFont('OpenSans-LI','',9);
+					$this -> SetFont('OpenSans-R','',9);
 					$this -> SetTextColor(100,100,100);
 					$eev = explode("- ", $Hvalue);
 					// if eelevel has a value and we're supposed to hide it
 					if(count($eev)==2 && strpos($hidden, trim(split(" ",$eev_labels[0])[0])) == true){
 						$this -> MultiCell($this->datakeyW, $this->lineHeight, br2newl($eev[0]), 0, 'L');	
-						$this -> pZ += ( $this->NumberOfLines('OpenSans-LI', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
+						$this -> pZ += ( $this->NumberOfLines('OpenSans-R', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
 					} else{
 						$this -> MultiCell($this->datakeyW, $this->lineHeight, br2newl($Hvalue), 0, 'L');	
-						$this -> pZ += ( $this->NumberOfLines('OpenSans-LI', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
+						$this -> pZ += ( $this->NumberOfLines('OpenSans-R', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
 					}
 				}
 				//print if energy efficiency value
 				else if(strpos(joinData($sa_labels),split(" ",$Hkey)[0]) !== false){
 					$this -> SetXY($X + $this->indent + $this->datakey_indent, $Y+$this->pZ);
-					$this -> SetFont('OpenSans-LI','',9);
+					$this -> SetFont('OpenSans-R','',9);
 					$this -> SetTextColor(100,100,100);
 					$sa = explode("- ", $Hvalue);
 					//if two values are given, and 'wieghted' was selected, show weighted value, else show gross value
 					if(count($sa)==2){
 						if(strpos($hidden, trim(split(" ",$wsa_labels[0])[0])) == true){
 							$this -> MultiCell($this->datakeyW, $this->lineHeight, br2newl($sa[1]), 0, 'L');	
-							$this -> pZ += ( $this->NumberOfLines('OpenSans-LI', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
+							$this -> pZ += ( $this->NumberOfLines('OpenSans-R', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
 						} else {
 							$this -> MultiCell($this->datakeyW, $this->lineHeight, br2newl($sa[0]), 0, 'L');	
-							$this -> pZ += ( $this->NumberOfLines('OpenSans-LI',$Hvalue, $this->datakeyW)*($this->lineHeight) );	
+							$this -> pZ += ( $this->NumberOfLines('OpenSans-R',$Hvalue, $this->datakeyW)*($this->lineHeight) );	
 						}
 					} 
 					//print whatever value was given
 					else{
 						$this -> MultiCell($this->datakeyW, $this->lineHeight, br2newl($Hvalue), 0, 'L');	
-						$this -> pZ += ( $this->NumberOfLines('OpenSans-LI', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
+						$this -> pZ += ( $this->NumberOfLines('OpenSans-R', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
 					}
 					
 				}
 				//print regular values
 				else {
 					$this -> SetXY($X + $this->indent + $this->datakey_indent, $Y+$this->pZ);
-					$this -> SetFont('OpenSans-LI','',9);
+					$this -> SetFont('OpenSans-R','',9);
 					$this -> SetTextColor(100,100,100);
 					$this -> MultiCell($this->datakeyW, $this->lineHeight, br2newl($Hvalue), 0, 'L');	
-					$this -> pZ += ( $this->NumberOfLines('OpenSans-LI', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
+					$this -> pZ += ( $this->NumberOfLines('OpenSans-R', $Hvalue, $this->datakeyW)*($this->lineHeight) );	
 				}
 			
 				//add space between this and next dataitem
@@ -330,8 +330,8 @@ $pdf -> SetMargins(14,7,9);
 //get total number of pages
 $pdf -> AliasNbPages();
 //declare Open Sans fonts
-//$pdf->AddFont('OpenSans-LI','','./OpenSans-LightItalic.ttf', TRUE);
-$pdf->AddFont('OpenSans-R','','./OpenSans-Regular.ttf', TRUE);
+$pdf->AddFont('OpenSans-LI','','OpenSans-LightItalic.ttf', TRUE);
+$pdf->AddFont('OpenSans-R','','OpenSans-Regular.ttf', TRUE);
 //$pdf->AddFont('OpenSans-SB','','./OpenSans-SemiboldItalic.ttf', TRUE);
 
 

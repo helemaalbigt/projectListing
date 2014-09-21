@@ -371,7 +371,7 @@ function retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $fi
 	$sql = str_ireplace($spaces, "%20", $sql);
 
 	echo <<<PREVIEW
-	<iframe id="previewIframe" src="http://tvb-design.com/projectListing/project_listing_print.php?title=$listtitle&language=$language&hidden=$hiddenFields" frameBorder="0"><p>Your browser does not support iframes.</p></iframe>
+	<iframe id="previewIframe" src="./project_listing_print.php?title=$listtitle&language=$language&hidden=$hiddenFields" frameBorder="0"><p>Your browser does not support iframes.</p></iframe>
 PREVIEW;
 }
 
@@ -393,7 +393,7 @@ CLOSE;
 
 	if(!$loggedIn){
 		$returnHTML .= <<<LOGIN
-						<form id="login_inputform"  action="/projectListing/inc/update.inc.php" method="post">
+						<form id="login_inputform"  action="./inc/update.inc.php" method="post">
 							<fieldset>
 								<div>
 									<div class="login_input">
@@ -453,7 +453,7 @@ INFO;
 		$returnHTML .= <<<ADD
 						<hr>
 						<div class="red">CREATE NEW USER</div>
-						<form id="createuser_inputform" action="/projectListing/inc/update.inc.php" method="post">
+						<form id="createuser_inputform" action="./inc/update.inc.php" method="post">
 							<fieldset>
 								<div></br>
 									<div class="login_input">
@@ -481,7 +481,7 @@ ADD;
 	if($loggedIn){
 		$returnHTML .= <<<LOGOUT
 		<hr>
-		<form id="logout_inputform" action="/projectListing/inc/update.inc.php" method="post">
+		<form id="logout_inputform" action="./inc/update.inc.php" method="post">
 			<fieldset>
 				<input type="hidden" name="action" value="logout"/>
 				<input id="logout_submit" type="submit" name="logout" value="LOG OUT"/>

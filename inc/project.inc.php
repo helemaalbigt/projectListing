@@ -248,11 +248,12 @@ class Project {
 
 		//handle cover image
 		$img_path = array(NULL, NULL);
+		//echo realpath("../images/original/"); exit;
 		//if clause prevent execution if project was edited(id exists) and no new image was added (image is not empty)
 		if (empty($p['id']) || $_FILES['cover_image']['name'] != '') {
 			try {
 				//Isstantiate the class and set a save path
-				$img = new ImageHandler("/projectListing/images/original/", "/projectListing/images/resized/");
+				$img = new ImageHandler("/images/original/", "/images/resized/");
 				//Process the file and store the returned path
 				$img_path = $img -> processUploadedImage($_FILES['cover_image']);
 			} catch (Exception $e) {
@@ -269,7 +270,7 @@ class Project {
 				//if filefield not empty process the new image
 				if($_FILES['other_images']['name'][$i] != ''){
 					//Isstantiate the class and set a save path
-					$img = new ImageHandler("/projectListing/images/original/", "/projectListing/images/resized/");
+					$img = new ImageHandler("/images/original/","/images/resized/");
 					//rarrange array
 					$file_array = array("name"=>$_FILES['other_images']['name'][$i], "type"=>$_FILES['other_images']['type'][$i], "tmp_name"=>$_FILES['other_images']['tmp_name'][$i], "error"=>$_FILES['other_images']['error'][$i], "size"=>$_FILES['other_images']['size'][$i]);
 					//Process the file and store the returned path
@@ -419,7 +420,8 @@ WRAPPERSTART;
 
 		//generate image
 		if ($showImages) {
-			$img = $this -> coverimage;
+			//build the image src. built ass the app folder + location (trim /projectListing from old data)
+			$img = APP_FOLDER.str_replace("/projectListing", "", $this -> coverimage);
 			//add coverimage
 			$formattedProject .= <<<IMG
 		<div class="img_column">
@@ -518,8 +520,8 @@ TEXTWRAPPERSTART;
 		<div class="menu_wrapper">
 			<div class="menu">
 				<ul>
-					<li><a class="button" href="/projectListing/admin.php?id=$Lid">Edit</a></li>
-					<li><a class="button delete" href="/projectListing/inc/update.inc.php?action=project_delete&id=$Lid">Delete</a></li>
+					<li><a class="button" href="./admin.php?id=$Lid">Edit</a></li>
+					<li><a class="button delete" href="./inc/update.inc.php?action=project_delete&id=$Lid">Delete</a></li>
 				</ul>
 			</div>
 		</div>

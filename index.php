@@ -671,7 +671,7 @@ else{
 			</div>
 			
 			<!--SIDEBAR-->
-			<form class="inputform" method="post" action="/projectListing/index.php" enctype="multipart/form-data" onsubmit="return checkInputForm()">
+			<form class="inputform" method="post" action="./index.php" enctype="multipart/form-data" onsubmit="return checkInputForm()">
 			<fieldset>
 			<div id="sidebar_wrapper">
 				<div id="sidebar">

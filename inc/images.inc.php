@@ -53,7 +53,7 @@ class ImageHandler {
 		//Create the full path to the  resized image for saving
 		$filepath_resized = $this -> save_dir_resized . $name;
 		//store the absolute filepath to move the image
-		$absolute_resized = $_SERVER['DOCUMENT_ROOT'] . $filepath_resized;
+		$absolute_resized = $_SERVER['DOCUMENT_ROOT'] .APP_FOLDER. $filepath_resized;
 		
 		//generate a resized image
 		$this -> doImageResize($tmp, $absolute_resized);
@@ -65,7 +65,7 @@ class ImageHandler {
 		//Create the full path to the  resized image for saving
 		$filepath_original = $this -> save_dir_original . $name;
 		//store the absolute filepath to move the image
-		$absolute_original = $_SERVER['DOCUMENT_ROOT'] . $filepath_original;
+		$absolute_original = $_SERVER['DOCUMENT_ROOT'] .APP_FOLDER. $filepath_original;
 		
 		//save original
 		if (!move_uploaded_file($tmp, $absolute_original)) {
@@ -85,8 +85,8 @@ class ImageHandler {
 	 */
 	private function checkSaveDir() {
 		//determines the path to check
-		$path_resized = $_SERVER['DOCUMENT_ROOT'] . $this -> save_dir_resized;
-		$path_original = $_SERVER['DOCUMENT_ROOT'] . $this -> save_dir_original;
+		$path_resized = $_SERVER['DOCUMENT_ROOT'] .APP_FOLDER. $this -> save_dir_resized;
+		$path_original = $_SERVER['DOCUMENT_ROOT'] .APP_FOLDER. $this -> save_dir_original;
 
 		//checks if directory exists
 		if (!is_dir($path_resized)) {
@@ -100,7 +100,7 @@ class ImageHandler {
 			//creates the directory
 			if (!mkdir($path_original, 0777, TRUE)) {
 				//on failure, throw an error
-				throw new Exception("Cen't create the image directory!");
+				throw new Exception("Can't create the image directory!");
 			}
 		}
 	}

@@ -230,7 +230,7 @@ if (isset($_GET['id'])) {
 			<h1 class="red"><?php echo $pagetitle ?></h1>
 			</br>
 		
-			<form class="inputform" id="inputform" name="addProject" method="post" action="/projectListing/inc/update.inc.php" enctype="multipart/form-data" onsubmit="return checkInputForm(<?php echo $edit ?>)">
+			<form class="inputform" id="inputform" name="addProject" method="post" action="./inc/update.inc.php" enctype="multipart/form-data" onsubmit="return checkInputForm(<?php echo $edit ?>)">
 				<fieldset>
 
 					<!--<legend>
@@ -363,7 +363,7 @@ if (isset($_GET['id'])) {
 							<?php
 							//if you're editing, display an image
 							if (isset($_GET['id'])) {
-								$img = $project -> coverimage;
+								$img = APP_FOLDER.str_replace("/projectListing", "", $project -> coverimage);
 								echo "<img src=\"" . $img . "\"/><div class=\"description\">current image</div></br>";
 							}
 								?>
@@ -401,7 +401,7 @@ if (isset($_GET['id'])) {
 									for ($i = 0; $i < count($project->otherimages); $i++) {
 										
 										$Pimg = splitData($project->otherimages[$i])[0];
-										$Psrc = splitData($Pimg)[1];
+										$Psrc = APP_FOLDER.str_replace("/projectListing", "", splitData($Pimg)[1]);
 										$Pdescrition = splitData(splitData($project->otherimages[$i])[1]);
 										$PdFR = ($Pdescrition[0]=="/") ? "": htmlentities($Pdescrition[0]);
 										$PdNL = ($Pdescrition[1]=="/") ? "": htmlentities($Pdescrition[1]);	

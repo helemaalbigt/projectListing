@@ -1,12 +1,15 @@
 <?php
-include_once '/inc/functions.inc.php';
-require '/inc/parameter_values.inc.php';
+include_once './inc/db.inc.php';
+include_once './inc/functions.inc.php';
+require './inc/parameter_values.inc.php';
 
-//helps interptre french accented characters. They have special needs
-header('Content-type: text/html; charset=utf-8');
+echo $_SERVER['DOCUMENT_ROOT'].APP_FOLDER;
 
-$s = "FRjoiner5joiner10joinerWHERE projecttype='projets-_--eprojects-_--eproject' OR projecttype='concourss-_--ewedstrijds-_--ecompetition' OR projecttype='étude de faisibilités-_--ehaalbaarheidsstudies-_--efeasibility study' OR projecttype='autres-_--eanderes-_--eother'";
-$a = splitData($s, 0, "joiner");
-print_r($a)
+echo ltrim("okok","k")."<br>";
+
+echo ltrim("/projectListing/images/original/1410611672_1565.jpg", '/projectListing');
+echo "<br>".ltrim("/projectListing/images/original/1408706757_7210.jpg", "/projectListing");
+echo "<br>".str_replace("/projectListing", "", "/projectListing/images/original/1410611672_1565.jpg");
+
 
 ?>

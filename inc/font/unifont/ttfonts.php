@@ -493,6 +493,8 @@ var $maxStrLenRead;
 
 	function makeSubset($file, &$subset) {
 		$this->filename = $file;
+		//DEBUG
+		//echo $file; exit;
 		$this->fh = fopen($file ,'rb') or die('Can\'t open file ' . $file);
 		$this->_pos = 0;
 		$this->charWidths = '';

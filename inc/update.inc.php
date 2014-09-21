@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit'] == 'save project' &
 	//update the project
 	$id = $project -> updateProject($_POST);
 	if (!empty($id)) {
-		header('Location:/projectListing/review.php?id=' . $id);
+		header('Location:../review.php?id=' . $id);
 		exit ;
 	} else {
 		exit('ERROR: problem updating project');
@@ -36,7 +36,7 @@ else if ($_GET['action'] == 'project_delete') {
 
 	//Delete the comment and return to the entry
 	if ($project -> deleteProject($_GET['id'])) {
-		header('Location:/projectListing/index.php');
+		header('Location:../index.php');
 		exit ;
 	}
 	//if deletion fails, output an error message
@@ -58,7 +58,7 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'create_user
 	$stmt->execute(array($_POST['login_name'], $_POST['login_password'], $_POST['usertype']));
 	$stmt -> closeCursor();
 	
-	header('Location:/projectListing/index.php');
+	header('Location:../index.php');
 	exit;
 }
 //if login is pressed, log in
@@ -78,7 +78,7 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'login' && !
 	} else{
 		$_SESSION['loggedin'] = NULL;
 	}
-	header('Location:/projectListing/index.php');
+	header('Location:../index.php');
 	exit;
 		
 } 
@@ -89,12 +89,12 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'logout'){
 	if(isset($_SESSION['username'])) unset($_SESSION['username']);
 	if(isset($_SESSION['usertype'])) unset($_SESSION['usertype']);
 	
-	header('Location:/projectListing/index.php');
+	header('Location:../index.php');
 	exit;
 } 
 //if no conditions met, go to homepage by default
 else {
-	header('Location:/projectListing/index.php');
+	header('Location:../index.php');
 	exit ;
 }
 ?>

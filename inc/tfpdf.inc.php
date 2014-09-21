@@ -493,8 +493,11 @@ function AddFont($family, $style='', $file='', $uni=false)
 		return;
 
 	if ($uni) {
-		if (defined("_SYSTEM_TTFONTS") && file_exists(_SYSTEM_TTFONTS.$file )) { $ttffilename = _SYSTEM_TTFONTS.$file ; }
-		else { $ttffilename = $this->_getfontpath().'unifont/'.$file ; }
+		//if (defined("_SYSTEM_TTFONTS") && file_exists(_SYSTEM_TTFONTS.$file )) { $ttffilename = _SYSTEM_TTFONTS.$file ; }
+		//else { $ttffilename = $this->_getfontpath().'unifont/'.$file ; }
+		if (defined("_SYSTEM_TTFONTS") && file_exists(_SYSTEM_TTFONTS.$file )) { $ttffilename = $_SERVER['DOCUMENT_ROOT'].APP_FOLDER."/inc/font/unifont/".$file ; }
+		else { $ttffilename = $_SERVER['DOCUMENT_ROOT'].APP_FOLDER."/inc/font/unifont/".$file ; }
+		//echo $ttffilename;exit;
 		$unifilename = $this->_getfontpath().'unifont/'.strtolower(substr($file ,0,(strpos($file ,'.'))));
 		$name = '';
 		$originalsize = 0;
@@ -1853,7 +1856,9 @@ function _putfonts()
 			$fontname = 'MPDFAA'.'+'.$font['name'];
 			$subset = $font['subset'];
 			unset($subset[0]);
-			$ttfontstream = $ttf->makeSubset($font['ttffile'], $subset);
+			//$ttfontstream = $ttf->makeSubset($font['ttffile'], $subset);
+			//EDITED LINE - tvb //
+			$ttfontstream = $ttf->makeSubset($_SERVER['DOCUMENT_ROOT'].APP_FOLDER."/inc/font/unifont/".$file, $subset);
 			$ttfontsize = strlen($ttfontstream);
 			$fontstream = gzcompress($ttfontstream);
 			$codeToGlyph = $ttf->codeToGlyph;
