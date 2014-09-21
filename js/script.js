@@ -146,6 +146,23 @@ function toggleClass(cb, target, cl) {
 }
 
 /**
+ * In a form, replace preview image when a new image is selected
+ *  
+ * @param 
+ * @return
+ */
+function updatePreviewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();            
+        reader.onload = function (event) {
+        	//get the img element above the file input and change the src
+           $(input).parent().siblings('img').filter(':first').attr('src', event.target.result); 
+        }            
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+/**
  * Check for errors in forms
  *
  * Checks empty fields, non numerical input in a numerical field, and bigger than errors.

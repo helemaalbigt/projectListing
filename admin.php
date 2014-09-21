@@ -42,6 +42,7 @@ if (isset($_GET['id'])) {
 		<!-- CSS LINKS -->
 		<link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
 		<!-- JAVASCRIPT LINKS -->
+		<script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="js/script.js"></script>
 		<script type="text/javascript" src="js/charcount.js"></script>
 		<script type="text/javascript">
@@ -361,14 +362,21 @@ if (isset($_GET['id'])) {
 						<label><span class="input_title">*Cover Image:</span></label>
 						<div class="input"> 
 							<?php
+							$img = APP_FOLDER."/images/noimage.jpg";
 							//if you're editing, display an image
 							if (isset($_GET['id'])) {
 								$img = APP_FOLDER.str_replace("/projectListing", "", $project -> coverimage);
-								echo "<img src=\"" . $img . "\"/><div class=\"description\">current image</div></br>";
 							}
+								echo <<<COVERIMG
+								<img id="coverimage_preview" src="$img"/>
+COVERIMG;
+							
 								?>
-							<span class="description">Max filesize 2Mb</span>
-							<input id="cover_image" type="file" name="cover_image"/>
+							
+							<div class="imageinput">
+								<span class="description">Max filesize 2Mb</span>
+								<input id="cover_image" type="file" name="cover_image" onchange="updatePreviewImage(this)"/>
+							</div>
 						</div>
 					</div>
 					
@@ -379,19 +387,21 @@ if (isset($_GET['id'])) {
 							<div id="images" class="copyablefield">
 								<!--hidden empty inputfield that can be coppied-->
 								<div id="image">
-									<span class="duplicate_counterimage"></span>
-							 		<span class="description">Max filesize 2Mb</span>
-									<input type="file" class="inputimage" name="other_images[]" /></br>
-									<span class="description">Description (max.100 char)</span></br>
-									<span class="description">FR: </span><input class="large" maxlength="100" type="text" name="other_images_description_FR[]" value=" " /></br>
-									<span class="description">NL: </span><input class="large" maxlength="100" type="text" name="other_images_description_NL[]" value=" " /></br>
-									<span class="description">EN: </span><input class="large" maxlength="100" type="text" name="other_images_description_EN[]" value=" " />
-									<input type="hidden" name="other_img_src[]" value="" />
-									
-									<button type="button" class="thin_button" onclick="document.getElementById('image').remove();">
-										Delete Image
-									</button>
-									
+									<img class="otherimage" src="./images/noimage.jpg"/>
+									<div class="imageinput">
+										<span class="duplicate_counterimage"></span>
+								 		<span class="description">Max filesize 2Mb</span>
+										<input type="file" class="inputimage" name="other_images[]" onchange="updatePreviewImage(this)"/></br>
+										<span class="description">Description (max.100 char)</span></br>
+										<span class="description">FR: </span><input class="large" maxlength="100" type="text" name="other_images_description_FR[]" value=" " /></br>
+										<span class="description">NL: </span><input class="large" maxlength="100" type="text" name="other_images_description_NL[]" value=" " /></br>
+										<span class="description">EN: </span><input class="large" maxlength="100" type="text" name="other_images_description_EN[]" value=" " />
+										<input type="hidden" name="other_img_src[]" value="" />
+										
+										<button type="button" class="thin_button" onclick="document.getElementById('image').remove();">
+											Delete Image
+										</button>
+									</div>
 									</br></br>
 								</div>
 								<!--load existing fields-->
@@ -414,21 +424,21 @@ if (isset($_GET['id'])) {
 									
 									<div id="image_div_$i">
 										<img class="otherimage" src="$Psrc"/>
-										<div class="description">current image</div></br>
 									
 										<span class="duplicate_counterimage"></span>
-										<span class="description">Max filesize 2Mb</span>
-										<input id="$ID" class="inputimage" type="file" name="other_images[]" /></br>
-										<span class="description">Description (max.100 char)</span></br>
-										<span class="description">FR: </span><input maxlength="120" class="large" type="text" name="other_images_description_FR[]" value="$PdFR" /></br>
-										<span class="description">NL: </span><input maxlength="120" class="large" type="text" name="other_images_description_NL[]" value="$PdNL" /></br>
-										<span class="description">EN: </span><input maxlength="120" class="large" type="text" name="other_images_description_EN[]" value="$PdEN" />
-										<input type="hidden" name="other_img_src[]" value="$Pimg" />
-										
-										<button type="button" class="thin_button" onclick="document.getElementById('image_div_$i').remove();">
-											Delete Image
-										</button>
-									
+										<div class="imageinput">
+											<span class="description">Max filesize 2Mb</span>
+											<input id="$ID" class="inputimage" type="file" name="other_images[]" onchange="updatePreviewImage(this)"/></br>
+											<span class="description">Description (max.100 char)</span></br>
+											<span class="description">FR: </span><input maxlength="120" class="large" type="text" name="other_images_description_FR[]" value="$PdFR" /></br>
+											<span class="description">NL: </span><input maxlength="120" class="large" type="text" name="other_images_description_NL[]" value="$PdNL" /></br>
+											<span class="description">EN: </span><input maxlength="120" class="large" type="text" name="other_images_description_EN[]" value="$PdEN" />
+											<input type="hidden" name="other_img_src[]" value="$Pimg" />
+											
+											<button type="button" class="thin_button" onclick="document.getElementById('image_div_$i').remove();">
+												Delete Image
+											</button>
+										</div>
 										</br></br>
 									</div>
 EXISTINGIMG;
@@ -437,20 +447,22 @@ EXISTINGIMG;
 								//or create empty field
 								else{
 									echo <<<INPUTIMG
-									<div id="image_div_0">	
-										<span class="duplicate_counterimage"></span>
-										<span class="description">Max filesize 2Mb</span>
-										<input id="image_0" class="inputimage" type="file" name="other_images[]" /></br>
-										<span class="description">Description (max.100 char)</span></br>
-										<span class="description">FR: </span><input maxlength="120" class="large" type="text" name="other_images_description_FR[]" value=" " /></br>
-										<span class="description">NL: </span><input maxlength="120" class="large" type="text" name="other_images_description_NL[]" value=" " /></br>
-										<span class="description">EN: </span><input maxlength="120" class="large" type="text" name="other_images_description_EN[]" value=" " />
-										<input type="hidden" name="other_img_src[]" value="" />
-										
-										<button type="button" class="thin_button" onclick="document.getElementById('image_div_0').remove();">
-											Delete Image
-										</button>
-										
+									<div id="image_div_0">
+										<img class="otherimage" src="./images/noimage.jpg"/>
+										<div class="imageinput">	
+											<span class="duplicate_counterimage"></span>
+											<span class="description">Max filesize 2Mb</span>
+											<input id="image_0" class="inputimage" type="file" name="other_images[]" onchange="updatePreviewImage(this)"/></br>
+											<span class="description">Description (max.100 char)</span></br>
+											<span class="description">FR: </span><input maxlength="120" class="large" type="text" name="other_images_description_FR[]" value=" " /></br>
+											<span class="description">NL: </span><input maxlength="120" class="large" type="text" name="other_images_description_NL[]" value=" " /></br>
+											<span class="description">EN: </span><input maxlength="120" class="large" type="text" name="other_images_description_EN[]" value=" " />
+											<input type="hidden" name="other_img_src[]" value="" />
+											
+											<button type="button" class="thin_button" onclick="document.getElementById('image_div_0').remove();">
+												Delete Image
+											</button>
+										</div>
 										</br></br>
 									</div>
 INPUTIMG;

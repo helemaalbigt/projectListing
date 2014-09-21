@@ -15,7 +15,6 @@ echo htmlspecialchars("<br> test $&", ENT_QUOTES);
 
 echo "<br>";
 
-$new = htmlspecialchars("<a href='test'>Test</a>");
-echo $new; // &lt;a href=&#039;test&#039;&gt;Test&lt;/a&gt;
-header('Location:./test.php?id='.$new);
+$a = array('test' => "ok", 'test2' => "ok", 'test3' => "ok");
+echo count($a);
 ?>

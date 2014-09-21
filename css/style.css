@@ -87,8 +87,7 @@ span.description, .description {
 }
 
 #inputform_wrapper img, .project_wrapper img {
-	height:113px;
- 	margin:5px 5px 0 0;
+	width: 215px;
 }
 
 .project_wrapper img.otherimage {
@@ -520,6 +519,12 @@ height:100%;
 
 #admin .imageinput .large{
 	width:335px;
+}
+
+#admin #inputform_wrapper img, #admin .project_wrapper img {
+	height:112px;
+	width:155px;	
+	margin: 6px 7px 0 0;
 }
 
 /*

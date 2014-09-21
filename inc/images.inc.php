@@ -169,7 +169,9 @@ class ImageHandler {
 			/*
 			 * If the image is smaller than the max dimensions, keep its dimensions by multiplying by 1
 			 */
-			$s = 1;
+			//$s = 1;
+			//or resize anyway
+			$s = max($max_w / $src_w, $max_h / $src_h);
 		}
 
 		//get new dimensions
