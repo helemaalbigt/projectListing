@@ -27,6 +27,9 @@ if (isset($_GET['id'])) {
 
 	$edit = "true";
 }
+
+//check if logged in and logged in as admin, if not, don't render page
+if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION['usertype']) && $_SESSION['usertype'] == "admin"){
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -914,3 +917,6 @@ DB;
 	</body>
 	<!-- BODY END -->
 </html>
+<?php } else{
+	echo "ERROR: You are not authorized to see this page";
+} ?>

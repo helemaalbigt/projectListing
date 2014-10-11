@@ -55,9 +55,23 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'create_user
 	//Open a database connection and store it
 	$db = new PDO(DB_INFO, DB_USER, DB_PASS);
 	
+	//PROCESS PASSWORD source:http://alias.io/2010/01/store-passwords-safely-with-php-and-mysql/
+	// A higher "cost" is more secure but consumes more processing power
+	$cost = 10;
+
+	// Create a random salt
+	$salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
+
+	// Prefix information about the hash so PHP knows how to verify it later.
+	// "$2a$" Means we're using the Blowfish algorithm. The following two digits are the cost parameter.
+	$salt = sprintf("$2a$%02d$", $cost) . $salt;
+
+	// Hash the password with the salt
+	$hash = crypt($password, $salt);
+	
 	$sql= "INSERT INTO admin (username, password, usertype) VALUES(?, SHA1(?), ?)";
 	$stmt = $db->prepare($sql);
-	$stmt->execute(array($_POST['login_name'], $_POST['login_password'], $_POST['usertype']));
+	$stmt->execute(array($_POST['login_name'], $hash, $_POST['usertype']));
 	$stmt -> closeCursor();
 	
 	header('Location:../index.php');

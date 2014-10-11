@@ -17,4 +17,25 @@ echo "<br>";
 
 $a = array('test' => "ok", 'test2' => "ok", 'test3' => "ok");
 echo count($a);
+
+$visible = false;
+
+if($visible){
 ?>
+<p>
+	hahahahaha
+	hahahad^$sq
+	fqdlkfnqdlfmq
+</p>
+<p>
+	hahahahaha
+	hahahad^$sq
+	fqdlkfnqdlfmq
+</p>
+<p>
+	hahahahaha
+	hahahad^$sq
+	fqdlkfnqdlfmq
+</p>
+
+<?php } ?>

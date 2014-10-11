@@ -175,14 +175,30 @@ label:hover{
   z-index:10000000;
 }
 
-#login_form a#hide_login{
+#login_form_sitewide{
+  background-color:white;
+  box-shadow:#888888 0 0 8px;
+  padding:12px 15px 18px 17px;
+  position:absolute;
+  top:calc(50% - 80px);
+  width:calc(100% - 32px);
+  z-index:10000000;
+}
+
+#login_form_sitewide #login_inputform{
+	width:325px;
+	margin:20px 0 10px calc(50% - 225px);
+	
+}
+
+#login_form_wrapper a#hide_login{
 	position:relative;
 	float:right;
 	margin-bottom:8px;
 	margin-right:3px;
 }
 
-#login_form a#hide_login:hover{
+#login_form_wrapper a#hide_login:hover{
 	color: rgb(217,55,41);
 	cursor:pointer;
 }
@@ -191,7 +207,7 @@ label:hover{
 	clear: both;
 }
 
-#login_form hr{
+#login_form_wrapper hr{
 	margin:18px 0 17px;
 }
 
@@ -213,6 +229,7 @@ label:hover{
 .login_input input.large{
 	width:218px;
 	font-size:120%;
+	margin-bottom:5px;
 	
 }
 
@@ -225,7 +242,7 @@ label:hover{
   margin:10px 3px 0 0;
 }
 
-#login_form fieldset{
+#login_form_wrapper fieldset{
   border:none;
   margin:0;
   padding:0;

@@ -412,13 +412,22 @@ PREVIEW;
  * @param boolean $ isAdmin
  * @return
  */
- function printLogin($loggedIn = FALSE, $isAdmin = FALSE){
- 	$returnHTML = <<<CLOSE
- 					<div id="login_form">
-						<a id="hide_login" onclick="swapDisplay('login_form_wrapper', 'none')">
+ function printLogin($loggedIn = FALSE, $isAdmin = FALSE, $sitewide = FALSE){
+ 	//opening tags
+ 	$loginID = ($sitewide && $loggedIn == FALSE) ? "login_form_sitewide":"login_form";
+ 	$returnHTML = <<<OPENTAGS
+ 					<div id="$loginID">
+OPENTAGS;
+	
+	//add closing button
+	if(!($sitewide && $loggedIn == FALSE)){
+	$returnHTML .= <<<CLOSE
+					<a id="hide_login" onclick="swapDisplay('login_form_wrapper', 'none')">
 						X
-						</a>
+					</a>
 CLOSE;
+	
+	}
 
 	if(!$loggedIn){
 		$returnHTML .= <<<LOGIN
@@ -494,8 +503,9 @@ INFO;
 									<div class="login_input">
 										<span>TYPE</span>
 										<select name="usertype">
-											<option value="contributor">Contributor &nbsp;<span class="gray">(edit projects)</span></option>
-											<option value="admin">Admin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">(edit users/projects)</span></option>
+											<option value="contributor">Contributor &nbsp;<span class="gray">(create lists)</span></option>
+											<option value="editor">Editor &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="gray">(+edit projects)</span></option>
+											<option value="admin">Admin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="gray">(+edit users profiles)</span></option>
 										</select>
 									</div>
 									<input type="hidden" name="action" value="create_user"/>

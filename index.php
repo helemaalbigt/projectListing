@@ -14,14 +14,11 @@ include_once './inc/interface_values.inc.php';
 include_once './inc/parameter_values.inc.php';
 include_once './inc/label_values.inc.php';
 
-//helps interptre french accented characters. They have special needs
+//helps interpret french accented characters. They have special needs
 header('Content-type: text/html; charset=utf-8');
 
 //Open a database connection and store it
 $db = new PDO(DB_INFO, DB_USER, DB_PASS);
-
-//increase max filesize for image uploads (doesn't work)
-ini_set('upload_max_filesize', '4M');
 
 //declare globals
 //menu
@@ -30,11 +27,12 @@ global $expand_globals, $expand_visibility, $expand_filters;
 global $hiddenFields;
 //filter
 global $show_empty, $filter_by_pt, $filter_ptypes, $filter_by_category, $filter_categories, $filter_by_client, $filter_clients, $filter_by_date, $filter_startdate, $filter_enddate, $filter_by_ps, $filter_statusses, $filter_by_eel, $filter_eels, $filter_by_eev, $filter_eev_min, $filter_eev_max, $filter_by_budget_e, $filter_budget_estimate_min, $filter_budget_estimate_max, $filter_by_budget_f, $filter_budget_final_min, $filter_budget_final_max ;
-//include 
 //global
 global $listtitle,$display_mode, $language, $projects_offset, $projects_current_offset, $filter_sql, $number_of_projects; 
 
-
+//sitewide login or open access?
+$sitewide = TRUE;
+//how many projects are displayed in one time
 $projects_pp = 10;
 
 /*
@@ -122,11 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			/*
 			 * MENU
 			 */
-			//expand globals?
+			//expand global tab?
 			$expand_globals = (isset($_POST['input_globals_checkbox'])) ? $_POST['input_globals_checkbox'] : NULL;
-			//expand globals?
+			//expand visibility tab?
 			$expand_visibility = (isset($_POST['input_visibility_checkbox'])) ? $_POST['input_visibility_checkbox'] : NULL;
-			//expand globals?
+			//expand filter tab?
 			$expand_filters = (isset($_POST['input_filters_checkbox'])) ? $_POST['input_filters_checkbox'] : NULL;
 			
 			/*
@@ -138,16 +136,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			/*
 			 * FILTER  update filter variables and construct sql query
 			 */
+			//start the query
 			$filter_sql = "WHERE (";
-			//showempty
+			//showempty selected?
 			$show_empty = (isset($_POST['show_empty'])) ? $_POST['show_empty'] : "";
 			
-			//project type
+			//project type selected?
 			$filter_by_pt = (isset($_POST['filter_by_pt'])) ? $_POST['filter_by_pt'] : "";
 			$filter_ptypes = (isset($_POST['project_type'])) ? ($_POST['project_type']) : $filter_ptypes;
 			if($filter_by_pt != "" && isset($_POST['project_type'])){
+				//loop through all selected
 				foreach ($filter_ptypes as $key => $value) {
 					$filter_sql .= " projecttype='".$value."' OR";
+					//in case of filter by "projects", include competitions that have been won
+					if($key==$projecttypes[0]){
+						$filter_sql .= " ( projecttype='".$projecttypes[1]."' AND competitionwon='yes') OR";
+					}
 				}
 				//if something was added, remove last "OR"
 				$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
@@ -370,6 +374,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$filter_sql = rtrim($filter_sql , "WHERE (");
 			//remove last AND
 			$filter_sql = rtrim($filter_sql , " AND (");
+			//debug
 			//echo $filter_sql;
 			
 			/*
@@ -619,7 +624,7 @@ else{
 				
 				
 				$("#load_more").click(function() {
-						
+					
 					//check if there are still projects to load
 					if(parseInt(projects_pp)+parseInt(projects_offset) <= parseInt(no_projects)){
 						//update variables
@@ -643,29 +648,30 @@ else{
 				document.getElementById(element).style.display = state;
 			}
 			
-			/**
-			 *Hide Login when scrolling 
-			 */
-			
 
 		</script>
 		<!-- Date: 2014-08-06 -->
 	</head>
 	<body>
-		<!--<?php if(isset($_SESSION['$projects_current_offset'])) echo $_SESSION['$projects_current_offset'] ?>-->
 		<div id="home">
 			
 			<!--LOGIN-->
 			<div class="none" id="login">
+				<?php 
+				//only show login button if logged in, or if login isen't sitewide
+				if(!$sitewide || ($sitewide && (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1) )){ 
+				?>
 				<a id="show_login" onclick="swapDisplay('login_form_wrapper', 'block')"> 
 						<?php $loginlink = (isset($_SESSION['username'])) ?  "user: ".$_SESSION['username'] : "LOG IN"; 
 						echo $loginlink ?>
 				</a>
-				<div id="login_form_wrapper" style="display: none">
+				<?php } ?>
+
+				<div id="login_form_wrapper" style="display: <?php echo ($sitewide && !(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1)) ? "block": "none"?>">
 					<?php 
 					$loggedin = (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1) ? TRUE : FALSE;
 					$admin = (isset($_SESSION['usertype']) && $_SESSION['usertype'] == "admin") ? TRUE : FALSE;
-					printLogin($loggedin, $admin); 
+					printLogin($loggedin, $admin, $sitewide); 
 					?>
 				</div>
 			</div>
@@ -1006,22 +1012,26 @@ else{
 			<div id="content_wrapper_<?php echo split(" ", trim($display_mode))[0] ?>">
 				<div id="content">
 					<?php
-					switch ($display_mode) {
-						case $displaymodes[1] :
-							retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $filter_sql);
-							break;
-
-						default :
-							//echo $language." ". $projects_pp." ". $filter_sql;
-							retrieveProjectsDataFormat($language, $projects_pp, 0, $filter_sql);
-							break;
-					}
+					//check if logged in before displaying data
+					if(!$sitewide || ($sitewide && isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1)){
+						//determine what mode to display in
+						switch ($display_mode) {
+							case $displaymodes[1] :
+								retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $filter_sql);
+								break;
+	
+							default :
+								//echo $language." ". $projects_pp." ". $filter_sql;
+								retrieveProjectsDataFormat($language, $projects_pp, 0, $filter_sql);
+								break;
+						}
 					?>
 				</div>
 				<div id="load_more_wrapper">
 					<a class="button load_more big_button" id="load_more" onclick="loadXMLDoc()">
 						LOAD NEXT <?php echo $projects_pp ?> PROJECTS
 					</a>
+					<?php } ?>
 				</div>
 			</div>
 			
