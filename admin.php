@@ -28,8 +28,8 @@ if (isset($_GET['id'])) {
 	$edit = "true";
 }
 
-//check if logged in and logged in as admin, if not, don't render page
-if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION['usertype']) && $_SESSION['usertype'] == "admin"){
+//check if logged in and logged in as admin or editor. If not, don't render page
+if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION['usertype']) && ($_SESSION['usertype'] == "admin" || $_SESSION['usertype'] == "editor")){
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -918,5 +918,5 @@ DB;
 	<!-- BODY END -->
 </html>
 <?php } else{
-	echo "ERROR: You are not authorized to see this page";
+	echo "ERROR: You are not authorized to see this page. <br> <br>Login on the home page with a valid admin or editor acount on the homepage";
 } ?>

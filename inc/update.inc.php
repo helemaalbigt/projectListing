@@ -50,6 +50,9 @@ else if ($_GET['action'] == 'project_delete') {
 } 
 //if create user is pressed, create user
 else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'create_user' && !empty($_POST['login_name']) && !empty($_POST['login_password']) && !empty($_POST['usertype'])){
+		
+	//clean post data
+	$cleanedPost = cleanData($_POST);	
 
 	include_once 'db.inc.php';
 	//Open a database connection and store it
@@ -67,11 +70,11 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'create_user
 	$salt = sprintf("$2a$%02d$", $cost) . $salt;
 
 	// Hash the password with the salt
-	$hash = crypt($password, $salt);
+	$hash = crypt($cleanedPost['login_password'], $salt);
 	
-	$sql= "INSERT INTO admin (username, password, usertype) VALUES(?, SHA1(?), ?)";
+	$sql= "INSERT INTO admin (username, password, usertype) VALUES(?, ?, ?)";
 	$stmt = $db->prepare($sql);
-	$stmt->execute(array($_POST['login_name'], $hash, $_POST['usertype']));
+	$stmt->execute(array($cleanedPost['login_name'], $hash, $cleanedPost['usertype']));
 	$stmt -> closeCursor();
 	
 	header('Location:../index.php');
@@ -80,14 +83,21 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'create_user
 //if login is pressed, log in
 else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'login' && !empty($_POST['login_name']) && !empty($_POST['login_password'])){
 		
+	//clean post data
+	$cleanedPost = cleanData($_POST);
+		
 	include_once 'db.inc.php';
 	//Open a database connection and store it
 	$db = new PDO(DB_INFO, DB_USER, DB_PASS);
-	$sql = "SELECT COUNT(*) AS num_users, username, usertype FROM admin WHERE username=? AND password=SHA1(?)";
+	$sql = "SELECT COUNT(*) AS num_users, username, password, usertype FROM admin WHERE username=?";
 	$stmt = $db->prepare($sql);
-	$stmt->execute(array($_POST['login_name'],$_POST['login_password']));
+	$stmt->execute(array($cleanedPost['login_name']));
 	$response = $stmt->fetch();
-	if($response['num_users'] > 0){
+	
+	//debug
+	//echo md5($_POST['login_password'].$response['salt'])."  -  ".$response['password'];exit;
+	
+	if($response['num_users'] > 0 && crypt($cleanedPost['login_password'], $response['password']) == $response['password']){
 		$_SESSION['loggedin'] = 1;
 		$_SESSION['username'] = $response['username'];
 		$_SESSION['usertype'] = $response['usertype'];

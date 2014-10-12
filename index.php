@@ -691,7 +691,7 @@ else{
 									<!--submit-->
 									<div>
 										<?php
-										if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1){
+										if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION['usertype']) && ($_SESSION['usertype'] == "admin" || $_SESSION['usertype'] == "editor")){
 										?>
 											<a class="button" href="admin.php"><span>ADD NEW PROJECT</span></a>
 										<?php

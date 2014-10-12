@@ -326,7 +326,7 @@ function retrieveProjectsDataFormat($language, $projects_pp, $projects_offset, $
 		//check if id is set in the $project_inclusion array, and take the incluision state from there. If not set to true (visible)
 		$included = (array_key_exists($project -> id, $_SESSION['project_inclusion'])) ? $_SESSION['project_inclusion'][$project -> id] : TRUE;
 		//check if contributor or admin is logged in, set boolean to make menus visible accordingly
-		$menus = (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1) ? TRUE : FALSE;
+		$menus = ((isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION['usertype']) && ($_SESSION['usertype'] == "admin" || $_SESSION['usertype'] == "editor"))) ? TRUE : FALSE;
 		echo $project -> formatProjectData($included, TRUE, $menus, TRUE);
 		flush();
 	}
@@ -464,16 +464,27 @@ LOGIN;
 AU;
 		
 				break;
-			
-			default:
+				
+			case 'editor':
 				$authorization = <<<AU2
 				<li>Authorization: 
 				<ul>
 					<li>create project listings</li>
 					<li>add/edit/delete projects</li>
 				</ul>
-				</li>
+			</li>
 AU2;
+		
+				break;
+			
+			default:
+				$authorization = <<<AU3
+				<li>Authorization: 
+				<ul>
+					<li>create project listings</li>
+				</ul>
+				</li>
+AU3;
 				
 				break;
 		}
