@@ -32,21 +32,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['submit'] == 'save project' &
 }
 //delete project
 else if ($_GET['action'] == 'project_delete') {
-
-	//instantiate the Project class
-	$project = new Project();
-
-	//Delete the comment and return to the entry
-	if ($project -> deleteProject($_GET['id'])) {
-		header('Location:../index.php');
+	//check if logged in and logged in as admin or editor before deleting
+	if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION['usertype']) && ($_SESSION['usertype'] == "admin" || $_SESSION['usertype'] == "editor")){	
+		//instantiate the Project class
+		$project = new Project();
+	
+		//Delete the comment and return to the entry
+		if ($project -> deleteProject($_GET['id'])) {
+			header('Location:../index.php');
+			exit ;
+		}
+		//if deletion fails, output an error message
+		else {
+			exit('ERROR: Could not delete the project.');
+		}
+	
 		exit ;
-	}
-	//if deletion fails, output an error message
-	else {
-		exit('ERROR: Could not delete the project.');
-	}
-
-	exit ;
+	} else{
+		exit('ERROR: You are not authorized to delete projects.');
+	};
 } 
 //if create user is pressed, create user
 else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'create_user' && !empty($_POST['login_name']) && !empty($_POST['login_password']) && !empty($_POST['usertype'])){
