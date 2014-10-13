@@ -7,6 +7,7 @@ include_once 'project.inc.php';
 //initialize session if none exists
 if (session_id() == '' || !isset($_SESSION)) {
 	// session isn't started
+	session_set_cookie_params(0);
 	session_start();
 }
 

@@ -365,7 +365,7 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION
 						<label><span class="input_title">*Cover Image:</span></label>
 						<div class="input"> 
 							<?php
-							$img = APP_FOLDER."/images/noimage.jpg";
+							$img = "./images/noimage.jpg";
 							//if you're editing, display an image
 							if (isset($_GET['id'])) {
 								$img = APP_FOLDER.str_replace("/projectListing", "", $project -> coverimage);
