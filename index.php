@@ -110,313 +110,312 @@ function setDefaults(){
 }
 
 /*
- * process passed variables and setup the filter query
+ * read passed variables in the url and setup the filter query
  */
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	//update parameters if 'update' button was pushed
-	if (isset($_POST['submit'])){
-		if ($_POST['submit'] == 'UPDATE') {
+if (isset($_GET['var'])) {
+	$post = urlToPost($_GET['var']);
+	//print_r($post);
+	//echo $post['input_globals_checkbox'];
+	/*
+	 * MENU
+	 */
+	//expand global tab?
+	$expand_globals = (isset($post['input_globals_checkbox'])) ? $post['input_globals_checkbox'] : NULL;
+	//expand visibility tab?
+	$expand_visibility = (isset($post['input_visibility_checkbox'])) ? $post['input_visibility_checkbox'] : NULL;
+	//expand filter tab?
+	$expand_filters = (isset($post['input_filters_checkbox'])) ? $post['input_filters_checkbox'] : NULL;
 	
-			/*
-			 * MENU
-			 */
-			//expand global tab?
-			$expand_globals = (isset($_POST['input_globals_checkbox'])) ? $_POST['input_globals_checkbox'] : NULL;
-			//expand visibility tab?
-			$expand_visibility = (isset($_POST['input_visibility_checkbox'])) ? $_POST['input_visibility_checkbox'] : NULL;
-			//expand filter tab?
-			$expand_filters = (isset($_POST['input_filters_checkbox'])) ? $_POST['input_filters_checkbox'] : NULL;
-			
-			/*
-			 * VISIBLE
-			 */
-			//string of elements to show
-			$hiddenFields= (isset($_POST['visibilityHidden'])) ? joinData($_POST['visibilityHidden']) : $hiddenFields;
-			
-			/*
-			 * FILTER  update filter variables and construct sql query
-			 */
-			//start the query
-			$filter_sql = "WHERE (";
-			//showempty selected?
-			$show_empty = (isset($_POST['show_empty'])) ? $_POST['show_empty'] : "";
-			
-			//project type selected?
-			$filter_by_pt = (isset($_POST['filter_by_pt'])) ? $_POST['filter_by_pt'] : "";
-			$filter_ptypes = (isset($_POST['project_type'])) ? ($_POST['project_type']) : $filter_ptypes;
-			if($filter_by_pt != "" && isset($_POST['project_type'])){
-				//loop through all selected
-				foreach ($filter_ptypes as $key => $value) {
-					$filter_sql .= " projecttype='".$value."' OR";
-					//in case of filter by "projects", include competitions that have been won
-					if($key==$projecttypes[0]){
-						$filter_sql .= " ( projecttype='".$projecttypes[1]."' AND competitionwon='yes') OR";
-					}
-				}
-				//if something was added, remove last "OR"
-				$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
-				$filter_sql .= ") AND (";
+	/*
+	 * VISIBLE
+	 */
+	//string of elements to show
+	$hiddenFields= (isset($post['visibilityHidden'])) ? joinData($post['visibilityHidden']) : $hiddenFields;
+	
+	/*
+	 * FILTER  update filter variables and construct sql query
+	 */
+	//start the query
+	$filter_sql = "WHERE (";
+	//showempty selected?
+	$show_empty = (isset($post['show_empty'])) ? $post['show_empty'] : "";
+	
+	//project type selected?
+	$filter_by_pt = (isset($post['filter_by_pt'])) ? $post['filter_by_pt'] : "";
+	$filter_ptypes = (isset($post['project_type'])) ? ($post['project_type']) : $filter_ptypes;
+	if($filter_by_pt != "" && isset($post['project_type'])){
+		//loop through all selected
+		foreach ($filter_ptypes as $key => $value) {
+			$filter_sql .= " projecttype='".$value."' OR";
+			//in case of filter by "projects", include competitions that have been won
+			if($key==$projecttypes[0]){
+				$filter_sql .= " ( projecttype='".$projecttypes[1]."' AND competitionwon='yes') OR";
 			}
-			
-			//category
-			$filter_by_category = (isset($_POST['filter_by_category'])) ? $_POST['filter_by_category'] : "";
-			$filter_categories = (isset($_POST['category'])) ? $_POST['category'] : "";
-			if($filter_by_category != "" && isset($_POST['category'])){
-				//bad, bad code, I know. Mea Culpa
-				$anyCfound = false;
-				
-				$c1Found = false;
-				$v1Found = 0;
-				
-				$c2Found = false;
-				$v2Found = 0;
-				
-				$c3Found = false;
-				$v3Found = 0;
-				
-				$c4Found = false;
-				$v4Found = 0;
-				
-				$c5Found = false;
-				$v5Found = 0;
-				
-				foreach ($filter_categories as $key => $value) {
-					//urbanism
-					if($value == $categories[0]){
-						$anyCfound = true;
-						$c1Found = true;
-						$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
-					}
-					if($c1Found == true){
-						if(in_array($value, array_slice($categories, 1, 6))){
-							$filter_sql = rtrim($filter_sql, "category LIKE '%'");
-							$filter_sql .= " category LIKE '%".$value."%' OR";
-							$v1Found ++;
-							if($v1Found==6){
-								$filter_sql .= " category LIKE '%' OR";
-							}
-						}
-					}
-					//residential
-					if($value == $categories[7]){
-						$filter_sql = rtrim($filter_sql, "OR");
-						$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;
-						
-						$anyCfound = true;
-						$c2Found = true;
-						$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
-					}
-					if($c2Found == true){
-						if(in_array($value, array_slice($categories, 8, 2))){
-							$filter_sql = rtrim($filter_sql, "category LIKE '%'");
-							$filter_sql .= " category LIKE '%".$value."%' OR";
-							$v2Found ++;
-							if($v2Found==2){
-								$filter_sql .= " category LIKE '%' OR";
-							}
-						}
-					}
-					//public
-					if($value == $categories[10]){
-						$filter_sql = rtrim($filter_sql, "OR");
-						$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;
-						
-						$anyCfound = true;
-						$c3Found = true;
-						$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
-					}
-					if($c3Found == true){
-						if(in_array($value, array_slice($categories, 11, 3))){
-							$filter_sql = rtrim($filter_sql, "category LIKE '%'");
-							$filter_sql .= " category LIKE '%".$value."%' OR";
-							$v3Found ++;
-							if($v3Found==3){
-								$filter_sql .= " category LIKE '%' OR";
-							}
-						}
-					}
-					//offices
-					if($value == $categories[14]){
-						$filter_sql = rtrim($filter_sql, "OR");
-						$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;	
-						
-						$anyCfound = true;
-						$c4Found = true;
-						$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
-					}
-					if($c4Found == true){
-						if(in_array($value, array_slice($categories, 15, 3))){
-							$filter_sql = rtrim($filter_sql, "category LIKE '%'");
-							$filter_sql .= " category LIKE '%".$value."%' OR";
-							$v4Found ++;
-							if($v4Found==3){
-								$filter_sql .= " category LIKE '%' OR";
-							}
-						}
-					}
-					//other
-					if($value == $categories[18]){
-						$filter_sql = rtrim($filter_sql, "OR");
-						$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;
-						
-						$anyCfound = true;
-						$c5Found = true;
-						$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
-					}
-					if($c5Found == true){
-						if(in_array($value, array_slice($categories, 19, 5))){
-							$filter_sql = rtrim($filter_sql, "category LIKE '%'");
-							$filter_sql .= " category LIKE '%".$value."%' OR";
-							$v5Found ++;
-							if($v5Found==5){
-								$filter_sql .= " category LIKE '%' OR";
-							}
-						}
-					}
-				}
-				if($anyCfound){
-					//if something was added, remove last "OR"
-					$filter_sql = rtrim($filter_sql, "OR");
-					$filter_sql.= "))";
-					$filter_sql .= ") AND (";
-				}
-			}
-			
-			//client
-			$filter_by_client = (isset($_POST['filter_by_client'])) ? $_POST['filter_by_client'] : "";
-			$filter_clients = (isset($_POST['client'])) ? ($_POST['client']) : $filter_clients;
-			if($filter_by_client != "" && isset($_POST['client'])){
-				foreach ($filter_clients as $key => $value) {
-					$filter_sql .= " clienttype='".$value."' OR";
-				}
-				//if something was added, remove last "OR"
-				$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
-				$filter_sql .= ") AND (";
-			}
-			
-			//date
-			$filter_by_date = (isset($_POST['filter_by_date'])) ? $_POST['filter_by_date'] : "";
-			$filter_startdate = (isset($_POST['start_date'])) ? ($_POST['start_date']) : $filter_startdate;
-			$filter_enddate = (isset($_POST['end_date'])) ? ($_POST['end_date']) : $filter_enddate;
-			if($filter_by_date != ""){
-				$filter_sql .= " ((startdate >= ".$filter_startdate." AND startdate <= ".$filter_enddate.") OR (enddate >= ".$filter_startdate." AND enddate <= ".$filter_enddate.") OR (startdate <= ".$filter_startdate." AND enddate >= ".$filter_enddate."))";
-				//$filter_sql .= " startdate >= ".$filter_startdate." AND enddate <= ".$filter_enddate;
-				//in case enddate is smaller than the current year, we dont want 'ongoing' projects to be displayed
-				if($filter_enddate < date("Y")){//|| $filter_startdate > date("Y")
-					$filter_sql .=" AND enddate NOT LIKE '%lopend%ongoing%'";
-				} else if($filter_enddate >= date("Y") && $filter_startdate <= date("Y")){
-					$filter_sql .=" OR enddate LIKE '%lopend%ongoing%'";
-				}
-				$filter_sql .= ") AND (";
-			}
-			
-			//status
-			$filter_by_ps = (isset($_POST['filter_by_ps'])) ? $_POST['filter_by_ps'] : "";
-			$filter_statusses = (isset($_POST['PSL'])) ? $_POST['PSL'] : $filter_statusses;
-			if($filter_by_ps != "" && isset($_POST['PSL'])){
-				foreach ($filter_statusses as $key => $value) {
-					$filter_sql .= " status= &quot;".$value."&quot; OR";
-				}
-				//if something was added, remove last "OR"
-				$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
-				$filter_sql .= ") AND (";
-			}
-			
-			//eelevel
-			$filter_by_eel = (isset($_POST['filter_by_eel'])) ? $_POST['filter_by_eel'] : "";
-			$filter_eels = (isset($_POST['EFL'])) ? $_POST['EFL'] : $filter_eels;
-			if($filter_by_eel != "" && isset($_POST['EFL'])){
-				foreach ($filter_eels as $key => $value) {
-					$filter_sql .= " eelevel= &quot;".$value."&quot; OR";
-				}
-				//if something was added, remove last "OR"
-				$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
-				$filter_sql .= ") AND (";
-			}
-			
-			//eevalue
-			$filter_by_eev = (isset($_POST['filter_by_eev'])) ? $_POST['filter_by_eev'] : "";
-			$filter_eev_min = (isset($_POST['min_eev'])) ? ($_POST['min_eev']) : $filter_eev_min;
-			$filter_eev_max = (isset($_POST['max_eev'])) ? ($_POST['max_eev']) : $filter_eev_max;
-			if($filter_by_eev != ""){
-				$filter_sql .= " eevalue >= ".$filter_eev_min." AND eevalue <= ".$filter_eev_max;
-				if(!$show_empty){
-					$filter_sql.=" AND eevalue NOT LIKE '0'";
-				}
-				$filter_sql .= ") AND (";
-			}
-			
-			//budget_e
-			$filter_by_budget_e = (isset($_POST['filter_by_budget_e'])) ? $_POST['filter_by_budget_e'] : "";
-			$filter_budget_estimate_min = (isset($_POST['budget_e_min'])) ? ($_POST['budget_e_min']) : $filter_budget_estimate_min;
-			$filter_budget_estimate_max = (isset($_POST['budget_e_max'])) ? ($_POST['budget_e_max']) : $filter_budget_estimate_max;
-			if($filter_by_budget_e != ""){
-				$filter_sql .= " budget_estimate >= ".$filter_budget_estimate_min." AND budget_estimate <= ".$filter_budget_estimate_max;
-				if(!$show_empty){
-					$filter_sql.=" AND budget_estimate NOT LIKE '0'";
-				}
-				$filter_sql .= ") AND (";
-			}
-
-			//budget_f
-			$filter_by_budget_f = (isset($_POST['filter_by_budget_f'])) ? $_POST['filter_by_budget_f'] : "";
-			$filter_budget_final_min = (isset($_POST['budget_f_min'])) ? ($_POST['budget_f_min']) : $filter_budget_final_min;
-			$filter_budget_final_max = (isset($_POST['budget_f_max'])) ? ($_POST['budget_f_max']) : $filter_budget_final_max;
-			if($filter_by_budget_f != ""){
-				$filter_sql .= " budget_final >= ".$filter_budget_final_min." AND budget_final <= ".$filter_budget_final_max;
-				if(!$show_empty){
-					$filter_sql.=" AND budget_final NOT LIKE '0'";
-				}
-				$filter_sql .= ") AND (";
-			}
-			
-			//remove WHERE from $filter_sql if no conditiones where stated
-			$filter_sql = rtrim($filter_sql , "WHERE (");
-			//remove last AND
-			$filter_sql = rtrim($filter_sql , " AND (");
-			//debug
-			//echo $filter_sql;
-			
-			/*
-			 * INCLUDE
-			 */
-			//if we just came from the data view mode, update the checked and unchecked project include checkboxes
-			if($_POST['previouspage']==$displaymodes[0]){
-					
-				//turn on all selected projects	
-				if (isset($_POST['include_checkbox'])){
-					foreach ($_POST['include_checkbox'] as $key => $value) {
-						if (array_key_exists($value, $_SESSION['project_inclusion'])){
-							$_SESSION['project_inclusion'][$value] = 1;
-						}
-					}
-				}
-				//turn off all unselected projects
-				if (isset($_POST['include_checkboxHidden'])){
-					foreach ($_POST['include_checkboxHidden'] as $key => $value) {
-						if (array_key_exists($value, $_SESSION['project_inclusion'])){
-							$_SESSION['project_inclusion'][$value] = 0;
-						}
-					}
-				}
-			}
-						
-			/*
-			 * GLOBALS
-			 */
-			//check title
-			$listtitle = (isset($_POST['listtitle'])) ? $_POST['listtitle'] : $listtitle;
-			//check language
-			$language = (isset($_POST['language'])) ? $_POST['language'] : $language;
-			//check display mode
-			$display_mode = (isset($_POST['display_mode'])) ? $_POST['display_mode'] : $display_mode;
-			// get number of projects
-			$number_of_projects = retrieveNumberOfProjects($filter_sql);	
-			$projects_offset = 0;
 		}
-	} 
-	//reset session parameters if reset button is pressed
-	else if (isset($_POST['reset'])){
+		//if something was added, remove last "OR"
+		$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
+		$filter_sql .= ") AND (";
+	}
+	
+	//category
+	$filter_by_category = (isset($post['filter_by_category'])) ? $post['filter_by_category'] : "";
+	$filter_categories = (isset($post['category'])) ? $post['category'] : "";
+	if($filter_by_category != "" && isset($post['category'])){
+		//bad, bad code, I know. Mea Culpa
+		$anyCfound = false;
+		
+		$c1Found = false;
+		$v1Found = 0;
+		
+		$c2Found = false;
+		$v2Found = 0;
+		
+		$c3Found = false;
+		$v3Found = 0;
+		
+		$c4Found = false;
+		$v4Found = 0;
+		
+		$c5Found = false;
+		$v5Found = 0;
+		
+		foreach ($filter_categories as $key => $value) {
+			//urbanism
+			if($value == $categories[0]){
+				$anyCfound = true;
+				$c1Found = true;
+				$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
+			}
+			if($c1Found == true){
+				if(in_array($value, array_slice($categories, 1, 6))){
+					$filter_sql = rtrim($filter_sql, "category LIKE '%'");
+					$filter_sql .= " category LIKE '%".$value."%' OR";
+					$v1Found ++;
+					if($v1Found==6){
+						$filter_sql .= " category LIKE '%' OR";
+					}
+				}
+			}
+			//residential
+			if($value == $categories[7]){
+				$filter_sql = rtrim($filter_sql, "OR");
+				$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;
+				
+				$anyCfound = true;
+				$c2Found = true;
+				$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
+			}
+			if($c2Found == true){
+				if(in_array($value, array_slice($categories, 8, 2))){
+					$filter_sql = rtrim($filter_sql, "category LIKE '%'");
+					$filter_sql .= " category LIKE '%".$value."%' OR";
+					$v2Found ++;
+					if($v2Found==2){
+						$filter_sql .= " category LIKE '%' OR";
+					}
+				}
+			}
+			//public
+			if($value == $categories[10]){
+				$filter_sql = rtrim($filter_sql, "OR");
+				$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;
+				
+				$anyCfound = true;
+				$c3Found = true;
+				$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
+			}
+			if($c3Found == true){
+				if(in_array($value, array_slice($categories, 11, 3))){
+					$filter_sql = rtrim($filter_sql, "category LIKE '%'");
+					$filter_sql .= " category LIKE '%".$value."%' OR";
+					$v3Found ++;
+					if($v3Found==3){
+						$filter_sql .= " category LIKE '%' OR";
+					}
+				}
+			}
+			//offices
+			if($value == $categories[14]){
+				$filter_sql = rtrim($filter_sql, "OR");
+				$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;	
+				
+				$anyCfound = true;
+				$c4Found = true;
+				$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
+			}
+			if($c4Found == true){
+				if(in_array($value, array_slice($categories, 15, 3))){
+					$filter_sql = rtrim($filter_sql, "category LIKE '%'");
+					$filter_sql .= " category LIKE '%".$value."%' OR";
+					$v4Found ++;
+					if($v4Found==3){
+						$filter_sql .= " category LIKE '%' OR";
+					}
+				}
+			}
+			//other
+			if($value == $categories[18]){
+				$filter_sql = rtrim($filter_sql, "OR");
+				$filter_sql =($anyCfound == true) ? $filter_sql.=")) OR" : $filter_sql;
+				
+				$anyCfound = true;
+				$c5Found = true;
+				$filter_sql .= " (category LIKE '%".$value."%' AND ( category LIKE '%'";
+			}
+			if($c5Found == true){
+				if(in_array($value, array_slice($categories, 19, 5))){
+					$filter_sql = rtrim($filter_sql, "category LIKE '%'");
+					$filter_sql .= " category LIKE '%".$value."%' OR";
+					$v5Found ++;
+					if($v5Found==5){
+						$filter_sql .= " category LIKE '%' OR";
+					}
+				}
+			}
+		}
+		if($anyCfound){
+			//if something was added, remove last "OR"
+			$filter_sql = rtrim($filter_sql, "OR");
+			$filter_sql.= "))";
+			$filter_sql .= ") AND (";
+		}
+	}
+	
+	//client
+	$filter_by_client = (isset($post['filter_by_client'])) ? $post['filter_by_client'] : "";
+	$filter_clients = (isset($post['client'])) ? ($post['client']) : $filter_clients;
+	if($filter_by_client != "" && isset($post['client'])){
+		foreach ($filter_clients as $key => $value) {
+			$filter_sql .= " clienttype='".$value."' OR";
+		}
+		//if something was added, remove last "OR"
+		$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
+		$filter_sql .= ") AND (";
+	}
+	
+	//date
+	$filter_by_date = (isset($post['filter_by_date'])) ? $post['filter_by_date'] : "";
+	$filter_startdate = (isset($post['start_date'])) ? ($post['start_date']) : $filter_startdate;
+	$filter_enddate = (isset($post['end_date'])) ? ($post['end_date']) : $filter_enddate;
+	if($filter_by_date != ""){
+		$filter_sql .= " ((startdate >= ".$filter_startdate." AND startdate <= ".$filter_enddate.") OR (enddate >= ".$filter_startdate." AND enddate <= ".$filter_enddate.") OR (startdate <= ".$filter_startdate." AND enddate >= ".$filter_enddate."))";
+		//$filter_sql .= " startdate >= ".$filter_startdate." AND enddate <= ".$filter_enddate;
+		//in case enddate is smaller than the current year, we dont want 'ongoing' projects to be displayed
+		if($filter_enddate < date("Y")){//|| $filter_startdate > date("Y")
+			$filter_sql .=" AND enddate NOT LIKE '%lopend%ongoing%'";
+		} else if($filter_enddate >= date("Y") && $filter_startdate <= date("Y")){
+			$filter_sql .=" OR enddate LIKE '%lopend%ongoing%'";
+		}
+		$filter_sql .= ") AND (";
+	}
+	
+	//status
+	$filter_by_ps = (isset($post['filter_by_ps'])) ? $post['filter_by_ps'] : "";
+	$filter_statusses = (isset($post['PSL'])) ? $post['PSL'] : $filter_statusses;
+	if($filter_by_ps != "" && isset($post['PSL'])){
+		foreach ($filter_statusses as $key => $value) {
+			$filter_sql .= " status= &quot;".$value."&quot; OR";
+		}
+		//if something was added, remove last "OR"
+		$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
+		$filter_sql .= ") AND (";
+	}
+	
+	//eelevel
+	$filter_by_eel = (isset($post['filter_by_eel'])) ? $post['filter_by_eel'] : "";
+	$filter_eels = (isset($post['EFL'])) ? $post['EFL'] : $filter_eels;
+	if($filter_by_eel != "" && isset($post['EFL'])){
+		foreach ($filter_eels as $key => $value) {
+			$filter_sql .= " eelevel= &quot;".$value."&quot; OR";
+		}
+		//if something was added, remove last "OR"
+		$filter_sql = ($filter_sql!="WHERE") ?  rtrim($filter_sql, "OR") : $filter_sql;
+		$filter_sql .= ") AND (";
+	}
+	
+	//eevalue
+	$filter_by_eev = (isset($post['filter_by_eev'])) ? $post['filter_by_eev'] : "";
+	$filter_eev_min = (isset($post['min_eev'])) ? ($post['min_eev']) : $filter_eev_min;
+	$filter_eev_max = (isset($post['max_eev'])) ? ($post['max_eev']) : $filter_eev_max;
+	if($filter_by_eev != ""){
+		$filter_sql .= " eevalue >= ".$filter_eev_min." AND eevalue <= ".$filter_eev_max;
+		if(!$show_empty){
+			$filter_sql.=" AND eevalue NOT LIKE '0'";
+		}
+		$filter_sql .= ") AND (";
+	}
+	
+	//budget_e
+	$filter_by_budget_e = (isset($post['filter_by_budget_e'])) ? $post['filter_by_budget_e'] : "";
+	$filter_budget_estimate_min = (isset($post['budget_e_min'])) ? ($post['budget_e_min']) : $filter_budget_estimate_min;
+	$filter_budget_estimate_max = (isset($post['budget_e_max'])) ? ($post['budget_e_max']) : $filter_budget_estimate_max;
+	if($filter_by_budget_e != ""){
+		$filter_sql .= " budget_estimate >= ".$filter_budget_estimate_min." AND budget_estimate <= ".$filter_budget_estimate_max;
+		if(!$show_empty){
+			$filter_sql.=" AND budget_estimate NOT LIKE '0'";
+		}
+		$filter_sql .= ") AND (";
+	}
+
+	//budget_f
+	$filter_by_budget_f = (isset($post['filter_by_budget_f'])) ? $post['filter_by_budget_f'] : "";
+	$filter_budget_final_min = (isset($post['budget_f_min'])) ? ($post['budget_f_min']) : $filter_budget_final_min;
+	$filter_budget_final_max = (isset($post['budget_f_max'])) ? ($post['budget_f_max']) : $filter_budget_final_max;
+	if($filter_by_budget_f != ""){
+		$filter_sql .= " budget_final >= ".$filter_budget_final_min." AND budget_final <= ".$filter_budget_final_max;
+		if(!$show_empty){
+			$filter_sql.=" AND budget_final NOT LIKE '0'";
+		}
+		$filter_sql .= ") AND (";
+	}
+	
+	//remove WHERE from $filter_sql if no conditiones where stated
+	$filter_sql = rtrim($filter_sql , "WHERE (");
+	//remove last AND
+	$filter_sql = rtrim($filter_sql , " AND (");
+	//debug
+	//echo $filter_sql;
+	
+	/*
+	 * INCLUDE
+	 */
+	//if we just came from the data view mode, update the checked and unchecked project include checkboxes
+	if($post['previouspage']==$displaymodes[0]){
+			
+		//turn on all selected projects	
+		if (isset($post['include_checkbox'])){
+			foreach ($post['include_checkbox'] as $key => $value) {
+				if (array_key_exists($value, $_SESSION['project_inclusion'])){
+					$_SESSION['project_inclusion'][$value] = 1;
+				}
+			}
+		}
+		//turn off all unselected projects
+		if (isset($post['include_checkboxHidden'])){
+			foreach ($post['include_checkboxHidden'] as $key => $value) {
+				if (array_key_exists($value, $_SESSION['project_inclusion'])){
+					$_SESSION['project_inclusion'][$value] = 0;
+				}
+			}
+		}
+	}
+				
+	/*
+	 * GLOBALS
+	 */
+	//check title
+	$listtitle = (isset($post['listtitle'])) ? $post['listtitle'] : $listtitle;
+	//check language
+	$language = (isset($post['language'])) ? $post['language'] : $language;
+	//check display mode
+	$display_mode = (isset($post['display_mode'])) ? $post['display_mode'] : $display_mode;
+	// get number of projects
+	$number_of_projects = retrieveNumberOfProjects($filter_sql);	
+	$projects_offset = 0;
+} 
+//process passed variables and setup the filter query
+else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	if (isset($_POST['reset'])){
 		if ($_POST['reset'] == 'RESET') {
 			//Reset Session parameters
 			if(isset($_SESSION['project_inclusion'])) unset($_SESSION['project_inclusion']);
@@ -677,7 +676,8 @@ else{
 			</div>
 			
 			<!--SIDEBAR-->
-			<form class="inputform" method="post" action="./index.php" enctype="multipart/form-data" onsubmit="return checkInputForm()">
+			<!-- <form class="inputform" method="post" action="./index.php" enctype="multipart/form-data" onsubmit="return checkInputForm()"> -->
+			<form class="inputform" method="post" action="./inc/update.inc.php" enctype="multipart/form-data" onsubmit="return checkInputForm()">
 			<fieldset>
 			<div id="sidebar_wrapper">
 				<div id="sidebar">

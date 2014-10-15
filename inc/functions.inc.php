@@ -404,6 +404,53 @@ PREVIEW;
  	return $returnArray;
  }
 
+/**
+ * Convert Post data to a compressed string and then returns a url containing the data as a variable "var"
+ * 
+ * The main page of this application contains a complex form that filters the results of the projectListing.
+ * Although passing this formdata through the Post method would be simpler and cleaner,
+ * having this form pass its data through url allows specific filterconfigurations to be shared 
+ * between users by simply sharing the url
+ * 
+ * This funnction generates that url
+ * 
+ * @param array $post
+ * @param string $url
+ * @return string url with data in it
+ */ 
+function postToUrl($post,$url){
+	//serialize the post data
+	$serialized = serialize($post);
+	//compress the serialized string and urlencode it
+	$comp = urlencode(bzcompress($serialized, 9));
+	//$comp = str_replace("\0", "", bzcompress($serialized, 9));
+	//if the generated string exceeds the max length supported by browsers dipsplay an error
+	if(strlen($comp) >4000){
+		//$co = str_replace("\0", "", bzcompress($serialized, 9));
+		exit("ERROR: the selection generated a url that exceeded the character limit. Contact your administrator to resolve this problem.");
+	} else{
+		//make and return the url
+		return $url."?var=".$comp;
+	}
+}
+
+/**
+ * Revert the compressed urlencoded data passed through the url to the original post array
+ * 
+ * The main page of this application contains a complex form that filters the results of the projectListing.
+ * Although passing this formdata through the Post method would be simpler and cleaner,
+ * having this form pass its data through url allows specific filterconfigurations to be shared 
+ * between users by simply sharing the url.
+ * 
+ * This function decodes the variable from that url
+ * 
+ * @param string $var
+ * @return array 
+ */ 
+function urlToPost($var){
+	$post = (unserialize(bzdecompress($var)));
+	return $post;
+}
 
 /**
  * Print login or user popup

@@ -111,7 +111,6 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'login' && !
 	}
 	header('Location:../index.php');
 	exit;
-		
 } 
 //if logout is pressed, log out
 else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'logout'){
@@ -123,6 +122,12 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'logout'){
 	header('Location:../index.php');
 	exit;
 } 
+//if update is pressed, send the submitted data via url to the homepage
+else if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit']) && $_POST['submit'] == 'UPDATE'){
+	//echo postToUrl($_POST, '../index.html');
+	header("Location:".postToUrl($_POST, '../index.php')."\"");
+	exit;
+}
 //if no conditions met, go to homepage by default
 else {
 	header('Location:../index.php');
