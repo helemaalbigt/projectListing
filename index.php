@@ -29,6 +29,8 @@ global $hiddenFields;
 global $show_empty, $filter_by_pt, $filter_ptypes, $filter_by_category, $filter_categories, $filter_by_client, $filter_clients, $filter_by_date, $filter_startdate, $filter_enddate, $filter_by_ps, $filter_statusses, $filter_by_eel, $filter_eels, $filter_by_eev, $filter_eev_min, $filter_eev_max, $filter_by_budget_e, $filter_budget_estimate_min, $filter_budget_estimate_max, $filter_by_budget_f, $filter_budget_final_min, $filter_budget_final_max ;
 //global
 global $listtitle,$display_mode, $language, $projects_offset, $projects_current_offset, $filter_sql, $number_of_projects; 
+//include
+global $project_inclusion;
 
 //sitewide login or open access?
 $sitewide = TRUE;
@@ -95,9 +97,7 @@ function setDefaults(){
 	
 	//INCLUDE
 	//create array with all ids as keys, save for each id whether the project is included (=1 - default) or not (=0)
-	$_SESSION['project_inclusion'] = (isset($_SESSION['project_inclusion'])) ? $_SESSION['project_inclusion'] : array_fill_keys(retrieveIDs(), 1);
-	//if a project was deleted or added, reset the 'project_inclusion' array
-	$_SESSION['project_inclusion'] = (count(retrieveIDs())!= count($_SESSION['project_inclusion'])) ? array_fill_keys(retrieveIDs(), 1) : $_SESSION['project_inclusion'];
+	$GLOBALS['project_inclusion'] = array_fill_keys(retrieveIDs(), 1);
 	
 	//GLOBALS
 	$GLOBALS['listtitle'] = "";
@@ -105,17 +105,26 @@ function setDefaults(){
 	$GLOBALS['display_mode'] = (isset($_POST['display_mode'])) ? $_POST['display_mode'] : $displaymodes[0];
 	$GLOBALS['projects_offset'] = 0;
 	$GLOBALS['filter_sql'] = "";
-	$GLOBALS['number_of_projects'] = count($_SESSION['project_inclusion']);
+	$GLOBALS['number_of_projects'] = retrieveNumberOfProjects();
 
 }
 
 /*
  * read passed variables in the url and setup the filter query
  */
-if (isset($_GET['var'])) {
-	$post = urlToPost($_GET['var']);
-	//print_r($post);
-	//echo $post['input_globals_checkbox'];
+if (isset($_GET['q'])) {
+	
+	//get the query based on the ID passed through the url
+	//Open a database connection and store it
+	$db = new PDO(DB_INFO, DB_USER, DB_PASS);
+	//setup query
+	$sql = "SELECT query FROM queries WHERE id=?";
+	$stmt = $db->prepare($sql);
+	$stmt->execute(array($_GET['q']));
+	$response = $stmt->fetch();
+	
+	$post = unserialize($response["query"]);
+
 	/*
 	 * MENU
 	 */
@@ -379,24 +388,33 @@ if (isset($_GET['var'])) {
 	/*
 	 * INCLUDE
 	 */
+	//create array with all ids as keys, save for each id whether the project is included (=1 - default) or not (=0)
+	$GLOBALS['project_inclusion'] = array_fill_keys(retrieveIDs(), 1);
+	 
 	//if we just came from the data view mode, update the checked and unchecked project include checkboxes
 	if($post['previouspage']==$displaymodes[0]){
 			
 		//turn on all selected projects	
 		if (isset($post['include_checkbox'])){
 			foreach ($post['include_checkbox'] as $key => $value) {
-				if (array_key_exists($value, $_SESSION['project_inclusion'])){
-					$_SESSION['project_inclusion'][$value] = 1;
+				if (array_key_exists($value, $project_inclusion)){
+					$project_inclusion[$value] = 1;
 				}
 			}
 		}
 		//turn off all unselected projects
 		if (isset($post['include_checkboxHidden'])){
 			foreach ($post['include_checkboxHidden'] as $key => $value) {
-				if (array_key_exists($value, $_SESSION['project_inclusion'])){
-					$_SESSION['project_inclusion'][$value] = 0;
+				if (array_key_exists($value, $project_inclusion)){
+					$project_inclusion[$value] = 0;
 				}
 			}
+		}
+	} 
+	//if we came from the print preview mode, used the stored session variable for project_inclusion
+	else{
+		if(isset($_SESSION['$project_inclusion'])){
+			$project_inclusion = $_SESSION['$project_inclusion'];
 		}
 	}
 				
@@ -413,19 +431,18 @@ if (isset($_GET['var'])) {
 	$number_of_projects = retrieveNumberOfProjects($filter_sql);	
 	$projects_offset = 0;
 } 
-//process passed variables and setup the filter query
-else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	if (isset($_POST['reset'])){
-		if ($_POST['reset'] == 'RESET') {
-			//Reset Session parameters
-			if(isset($_SESSION['project_inclusion'])) unset($_SESSION['project_inclusion']);
-		}
-		setDefaults();
-	}
-}
 //if we're not updating, reset parameters to default 
 else{
 	setDefaults();
+}
+
+//handle reset
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	if (isset($_POST['reset'])){
+		if ($_POST['reset'] == 'RESET') {
+			setDefaults();
+		}
+	}
 }
 
 ?>
@@ -620,7 +637,7 @@ else{
 				var projects_offset = "<?php echo $projects_offset ?>";
 				var no_projects = "<?php echo $number_of_projects ?>";
 				var filter_sql = "<?php echo $filter_sql ?>";
-				
+				var project_inclusion = "<?php echo urlencode(serialize($project_inclusion))?>";
 				
 				$("#load_more").click(function() {
 					
@@ -629,7 +646,7 @@ else{
 						//update variables
 						projects_offset = parseInt(projects_offset)+parseInt(projects_pp);
 						//create joined array of arguments to pass to function
-						var arguments = joinData([language, projects_pp.toString(), projects_offset.toString(), filter_sql.toString()],"joiner");
+						var arguments = joinData([language, projects_pp.toString(), projects_offset.toString(), filter_sql.toString(), project_inclusion],"joiner");
 						arguments = arguments.toString()
 						//alert(arguments);
 						$.get("inc/functions.inc.php?arguments="+arguments+"&offset="+projects_offset, function(data) {
@@ -1017,12 +1034,12 @@ else{
 						//determine what mode to display in
 						switch ($display_mode) {
 							case $displaymodes[1] :
-								retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $filter_sql);
+								retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $project_inclusion, $filter_sql);
 								break;
 	
 							default :
 								//echo $language." ". $projects_pp." ". $filter_sql;
-								retrieveProjectsDataFormat($language, $projects_pp, 0, $filter_sql);
+								retrieveProjectsDataFormat($language, $projects_pp, 0, $project_inclusion, $filter_sql);
 								break;
 						}
 					?>

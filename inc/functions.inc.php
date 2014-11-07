@@ -17,7 +17,7 @@ if (isset($_GET['arguments'])) {
 	$_SESSION['$projects_current_offset'] = $_GET['offset'];
 	//execute function
 	//echo "<script> alert(\"".$arguments[3]."\");</script>";
-	retrieveProjectsDataFormat($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
+	retrieveProjectsDataFormat($arguments[0], $arguments[1], $arguments[2], unserialize(urldecode($arguments[4])), $arguments[3]);
 }
 
 /**
@@ -300,12 +300,12 @@ function retrieveIds($where = "") {
  *
  * @param string $language language to use
  * @param int $projects_pp amount of projects to load
- * @param string $included_projects ids of projects to include
- * @param array $project_inclusion
+ * @param int $projects_offset where to start
+ * @param array $project_inclusion array indicating which projects are selected or deselected (1/0 respectively)
  * @param string $where where clause of query
  * @return
  */
-function retrieveProjectsDataFormat($language, $projects_pp, $projects_offset, $where = "") {
+function retrieveProjectsDataFormat($language, $projects_pp, $projects_offset, $project_inclusion, $where = "") {
 
 	include_once 'project.inc.php';
 	include_once 'db.inc.php';
@@ -324,7 +324,7 @@ function retrieveProjectsDataFormat($language, $projects_pp, $projects_offset, $
 		$project -> setLanguage($language);
 		$project -> updateParameters($row['id']);
 		//check if id is set in the $project_inclusion array, and take the incluision state from there. If not set to true (visible)
-		$included = (array_key_exists($project -> id, $_SESSION['project_inclusion'])) ? $_SESSION['project_inclusion'][$project -> id] : TRUE;
+		$included = (array_key_exists($project -> id, $project_inclusion)) ? $project_inclusion[$project -> id] : TRUE;
 		//check if contributor or admin is logged in, set boolean to make menus visible accordingly
 		$menus = ((isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && isset($_SESSION['usertype']) && ($_SESSION['usertype'] == "admin" || $_SESSION['usertype'] == "editor"))) ? TRUE : FALSE;
 		echo $project -> formatProjectData($included, TRUE, $menus, TRUE);
@@ -343,15 +343,14 @@ function retrieveProjectsDataFormat($language, $projects_pp, $projects_offset, $
  * @param string $sql query to execute
  * @return
  */
-function retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $filter_sql = "") {
+function retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $project_inclusion, $filter_sql = "") {
 
-	$ids = joinData(array_keys($_SESSION['project_inclusion'], 0), ',');
+	$ids = joinData(array_keys($project_inclusion, 0), ',');
 	$where = "";
-	if (isset($_SESSION['project_inclusion']) && $ids != "/") {
+	if ($ids != "/") {
 		$where = "WHERE id NOT IN (" . $ids . ")";
 		//if there is also a filter query add it
 		if ($filter_sql != ""){
-			//echo "ok";
 			$where = ($where!="") ? $where." AND ".ltrim($filter_sql,"WHERE") : "";
 		}
 	} 
@@ -364,8 +363,11 @@ function retrieveProjectsPreviewFormat($listtitle, $language, $hiddenFields, $fi
 
 
 	$sql = "SELECT id FROM projects " . $where . " ORDER BY date DESC, created DESC";
-
+	
+	//save sql in a session variable
 	$_SESSION['sql_pp'] = $sql;
+	//save project_invlusion in a variable. This is needed bc when you go back to datamode, the inclusion input will be missing
+	$_SESSION['$project_inclusion'] = $project_inclusion;
 	//echo $sql;exit;
 	$spaces = array("\n", " ", "  ", "   ");
 	$sql = str_ireplace($spaces, "%20", $sql);
@@ -423,7 +425,6 @@ function postToUrl($post,$url){
 	$serialized = serialize($post);
 	//compress the serialized string and urlencode it
 	$comp = urlencode(bzcompress($serialized, 9));
-	//$comp = str_replace("\0", "", bzcompress($serialized, 9));
 	//if the generated string exceeds the max length supported by browsers dipsplay an error
 	if(strlen($comp) >4000){
 		//$co = str_replace("\0", "", bzcompress($serialized, 9));

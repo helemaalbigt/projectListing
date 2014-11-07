@@ -11,7 +11,7 @@ if (session_id() == '' || !isset($_SESSION)) {
 	session_start();
 }
 
-//helps interptre french accented characters. They have special needs
+//helps interpret french accented characters. They have special needs
 header('Content-type: text/html; charset=utf-8');
 
 //perform verification of input and required values
@@ -124,9 +124,37 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'logout'){
 } 
 //if update is pressed, send the submitted data via url to the homepage
 else if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit']) && $_POST['submit'] == 'UPDATE'){
+		
+	//check for name
+	$name = (isset($_POST['name'])) ? $_POST['name'] : "unnamed";
+	//check for saved
+	$saved= (isset($_POST['saved'])) ? $_POST['saved'] : FALSE;	
+	//serialize the post data
+	$query = serialize($_POST);
+
+	//Open a database connection and store it
+	$db = new PDO(DB_INFO, DB_USER, DB_PASS);
 	//echo postToUrl($_POST, '../index.html');
-	header("Location:".postToUrl($_POST, '../index.php')."\"");
-	exit;
+	$sql = "INSERT INTO queries (IP, name, saved, query) VALUES (?, ?, ?, ?)";
+	if ($stmt =  $db -> prepare($sql)) {
+		$stmt -> execute(array($_SERVER['REMOTE_ADDR'], $name, $saved, $query));
+		$stmt -> closeCursor();	
+		
+		//get the ID of the query that was just saved
+		$id_obj = $db -> query("SELECT LAST_INSERT_ID()");
+		//gets unique ID generated for last entry into database
+		$new_id = $id_obj -> fetch();
+		//pass data to the $id variable (array with the id in index [0])
+		$id_obj -> closeCursor();
+		$queryId = $new_id[0];
+		
+		//go back to homepage with the query id as a variable		
+		header("Location:../index.php?q=".$queryId."\"");
+		exit;		
+	} else{
+		exit("ERROR: problem processing query");
+	}
+
 }
 //if no conditions met, go to homepage by default
 else {
